@@ -33,10 +33,14 @@ const LoanButton = ({ bookId, onSuccess, className }: Props) => {
 
   return (
     <div>
-      <button onClick={handleClick} disabled={loading} className={className}>
+      <button 
+        onClick={handleClick} 
+        disabled={loading} 
+        className={className || "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition disabled:bg-gray-400 disabled:cursor-not-allowed"}
+      >
         {loading ? 'Processing…' : 'Borrow'}
       </button>
-      {message && <p style={{ marginTop: 8 }}>{message}</p>}
+      {message && <p className="mt-2 text-sm font-medium text-gray-700">{message}</p>}
     </div>
   )
 }

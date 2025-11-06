@@ -25,8 +25,8 @@ const BookDetail = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p style={{ padding: '1rem' }}>Loading...</p>;
-  if (!book) return <p style={{ padding: '1rem' }}>Book not found</p>;
+  if (loading) return <p className="text-gray-500 text-center py-8">Loading...</p>;
+  if (!book) return <p className="text-gray-500 text-center py-8">Book not found</p>;
 
  
   const handleBorrowSuccess = (data?: Book) => {
@@ -35,21 +35,31 @@ const BookDetail = () => {
   }
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: '1rem' }}>← Back</button>
-      <h2>{book.title}</h2>
-      {book.author && <p>By: {book.author}</p>}
-      {book.content && <p>{book.content}</p>}
-      {book.publicationYear && <p>Publication Year: {book.publicationYear}</p>}
-      {book.isbn && <p>ISBN: {book.isbn}</p>}
+    <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="mb-4 text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+      >
+        ← Back
+      </button>
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">{book.title}</h2>
+      
+      <div className="space-y-2 mb-6 text-gray-700">
+        {book.author && <p><span className="font-semibold">Author:</span> {book.author}</p>}
+        {(book as any).content && <p className="mt-4"><span className="font-semibold">Description:</span> {(book as any).content}</p>}
+        {(book as any).publicationYear && <p><span className="font-semibold">Publication Year:</span> {(book as any).publicationYear}</p>}
+        {(book as any).isbn && <p><span className="font-semibold">ISBN:</span> {(book as any).isbn}</p>}
+      </div>
 
       {book.available ? (
-        <div>
-          <p>Status: Available</p>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <p className="text-green-700 font-medium mb-3">Status: Available</p>
           <LoanButton bookId={String(id)} onSuccess={handleBorrowSuccess} />
         </div>
       ) : (
-        <p>Status: Unavailable</p>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-700 font-medium">Status: Unavailable</p>
+        </div>
       )}
     </div>
   );

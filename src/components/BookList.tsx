@@ -28,23 +28,29 @@ export default function BookList() {
     return books.filter((b) => (b.title ?? "").toLowerCase().includes(q));
   }, [books, query]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="text-gray-500 text-center py-8">Loading...</p>;
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>📚 Library Books</h2>
+    <div className="w-full">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">📚 Library Books</h2>
 
       <BookSearch query={query} onChange={setQuery} />
 
       {filtered.length === 0 ? (
-        <p>No books found for "{query}"</p>
+        <p className="text-gray-500 text-center py-8">No books found for "{query}"</p>
       ) : (
-        <ul>
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((b) => (
-            <li key={b.id}>
-              <Link to={`/books/${b.id}`} style={{ textDecoration: 'none' }}>
-                <strong>{b.title}</strong>
+            <li 
+              key={b.id}
+              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow"
+            >
+              <Link to={`/books/${b.id}`} className="no-underline">
+                <h3 className="font-semibold text-blue-600 hover:text-blue-800 text-lg">{b.title}</h3>
               </Link>
+              {(b as any).authors && (b as any).authors.length > 0 && (
+                <p className="text-gray-600 text-sm mt-2">By: {(b as any).authors.map((a: any) => a.name).join(", ")}</p>
+              )}
             </li>
           ))}
         </ul>
