@@ -15,7 +15,6 @@ export default function BookList() {
         return res.json();
       })
       .then(data => {
-        // pokud backend vrací stránkování (Page), bereme content
         setBooks(data.content ?? data);
       })
       .catch(console.error)
@@ -39,19 +38,22 @@ export default function BookList() {
       {filtered.length === 0 ? (
         <p className="text-gray-500 text-center py-8">No books found for "{query}"</p>
       ) : (
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0">
           {filtered.map((b) => (
-            <li 
+            <Link 
               key={b.id}
-              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow"
+              to={`/books/${b.id}`} 
+              className="no-underline"
             >
-              <Link to={`/books/${b.id}`} className="no-underline">
+              <li 
+                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer h-full"
+              >
                 <h3 className="font-semibold text-blue-600 hover:text-blue-800 text-lg">{b.title}</h3>
-              </Link>
-              {(b as any).authors && (b as any).authors.length > 0 && (
-                <p className="text-gray-600 text-sm mt-2">By: {(b as any).authors.map((a: any) => a.name).join(", ")}</p>
-              )}
-            </li>
+                {(b as any).authors && (b as any).authors.length > 0 && (
+                  <p className="text-gray-600 text-sm mt-2">By: {(b as any).authors.map((a: any) => a.name).join(", ")}</p>
+                )}
+              </li>
+            </Link>
           ))}
         </ul>
       )}
