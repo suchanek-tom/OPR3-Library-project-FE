@@ -45,10 +45,6 @@ export default function BookList() {
               <Link to={`/books/${b.id}`} style={{ textDecoration: 'none' }}>
                 <strong>{b.title}</strong>
               </Link>
-              {" "}
-              {b.authors && b.authors.length > 0 && (
-                <span>— {b.authors.map(a => a.name).join(", ")}</span>
-              )}
             </li>
           ))}
         </ul>
