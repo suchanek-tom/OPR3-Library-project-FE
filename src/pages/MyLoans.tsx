@@ -31,8 +31,8 @@ const MyLoans: FC = () => {
 
         const data = await response.json()
         const userLoans = Array.isArray(data) 
-          ? data.filter((loan: Loan) => loan.userId === user.id)
-          : data.content?.filter((loan: Loan) => loan.userId === user.id) || []
+          ? data.filter((loan: Loan) => loan.user?.id === user.id)
+          : data.content?.filter((loan: Loan) => loan.user?.id === user.id) || []
         
         setLoans(userLoans)
         setError('')
@@ -78,7 +78,7 @@ const MyLoans: FC = () => {
     }
   }
 
-  const getStatusBadge = (status: LoanStatus): string => {
+  const getStatusBadge = (status: LoanStatus | string): string => {
     if (status === 'ACTIVE') {
       return 'bg-yellow-100 text-yellow-800'
     } else {

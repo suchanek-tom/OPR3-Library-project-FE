@@ -5,11 +5,11 @@ export enum LoanStatus {
 
 export interface Loan {
   id: number
-  userId: number
-  bookId: number
+  userId?: number
+  bookId?: number
   loanDate: string
-  returnDate?: string
-  status: LoanStatus
+  returnDate?: string | null
+  status: string | LoanStatus
   book?: {
     id: number
     title: string
