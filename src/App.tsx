@@ -1,9 +1,10 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { User } from './types/User'
 
 const App = () => {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')

@@ -1,11 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FC, FormEvent, ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { User } from '../types/User'
 
-export const AddBook = () => {
+interface BookFormData {
+  title: string
+  author: string
+  isbn: string
+  publicationYear: number
+  available: boolean
+  content: string
+}
+
+const AddBook: FC = () => {
   const navigate = useNavigate()
-  const [isAuthorized, setIsAuthorized] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [formData, setFormData] = useState({
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [formData, setFormData] = useState<BookFormData>({
     title: '',
     author: '',
     isbn: '',
@@ -13,14 +23,14 @@ export const AddBook = () => {
     available: true,
     content: '',
   })
-  const [formLoading, setFormLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+  const [formLoading, setFormLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
+  const [success, setSuccess] = useState<string>('')
 
   useEffect(() => {
     const user = localStorage.getItem('user')
     if (user) {
-      const parsedUser = JSON.parse(user)
+      const parsedUser: User = JSON.parse(user)
       if (parsedUser.role === 'ROLE_ADMIN') {
         setIsAuthorized(true)
       }
@@ -47,15 +57,17 @@ export const AddBook = () => {
     )
   }
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target
+    const checked = (e.target as HTMLInputElement).checked
+    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : type === 'number' ? parseInt(value) : value
     }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
     setSuccess('')
@@ -87,7 +99,7 @@ export const AddBook = () => {
       })
 
       setTimeout(() => navigate('/books'), 2000)
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Failed to add book. Please try again.')
     } finally {
       setFormLoading(false)
@@ -178,7 +190,7 @@ export const AddBook = () => {
             name="content"
             value={formData.content}
             onChange={handleChange}
-            rows="4"
+            rows={4}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
             placeholder="Enter book description or content"
           />
@@ -234,4 +246,5 @@ export const AddBook = () => {
     </div>
   )
 }
+
 export default AddBook

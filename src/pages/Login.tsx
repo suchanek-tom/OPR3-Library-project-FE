@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useState, FC, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+const Login: FC = () => {
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -33,7 +33,7 @@ const Login = () => {
       localStorage.setItem('token', data.id)
       
       navigate('/')
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.')
     } finally {
       setLoading(false)

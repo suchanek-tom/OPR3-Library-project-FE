@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { User } from '../types/User'
 
-const Profile = () => {
+const Profile: FC = () => {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -33,7 +34,7 @@ const Profile = () => {
     )
   }
 
-  const getRoleBadgeColor = (role) => {
+  const getRoleBadgeColor = (role: string): string => {
     return role === 'ROLE_ADMIN' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
   }
 
@@ -99,12 +100,12 @@ const Profile = () => {
           </p>
         </div>
 
-          <button
-            onClick={() => navigate('/')}
-            className=" bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors w-full"
-          >
-            Back to Home
-          </button>
+        <button
+          onClick={() => navigate('/')}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors w-full"
+        >
+          Back to Home
+        </button>
       </div>
     </div>
   )

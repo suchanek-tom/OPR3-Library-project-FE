@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { User } from '../types/User'
+import { Loan, LoanStatus } from '../types/Loan'
 
-const MyLoans = () => {
+const MyLoans: FC = () => {
   const navigate = useNavigate()
-  const [loans, setLoans] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [user, setUser] = useState(null)
-  const [returning, setReturning] = useState(null)
+  const [loans, setLoans] = useState<Loan[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string>('')
+  const [user, setUser] = useState<User | null>(null)
+  const [returning, setReturning] = useState<number | null>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -29,8 +31,8 @@ const MyLoans = () => {
 
         const data = await response.json()
         const userLoans = Array.isArray(data) 
-          ? data.filter(loan => loan.userId === user.id)
-          : data.content?.filter(loan => loan.userId === user.id) || []
+          ? data.filter((loan: Loan) => loan.userId === user.id)
+          : data.content?.filter((loan: Loan) => loan.userId === user.id) || []
         
         setLoans(userLoans)
         setError('')
@@ -44,7 +46,7 @@ const MyLoans = () => {
     loadLoans()
   }, [user])
 
-  const handleReturnLoan = async (loanId) => {
+  const handleReturnLoan = async (loanId: number): Promise<void> => {
     if (!window.confirm('Are you sure you want to return this book?')) {
       return
     }
@@ -64,7 +66,7 @@ const MyLoans = () => {
 
       setLoans(loans.map(loan => 
         loan.id === loanId 
-          ? { ...loan, status: 'RETURNED' }
+          ? { ...loan, status: 'RETURNED' as LoanStatus }
           : loan
       ))
       alert('Book returned successfully!')
@@ -76,7 +78,7 @@ const MyLoans = () => {
     }
   }
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: LoanStatus): string => {
     if (status === 'ACTIVE') {
       return 'bg-yellow-100 text-yellow-800'
     } else {
@@ -84,7 +86,7 @@ const MyLoans = () => {
     }
   }
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',

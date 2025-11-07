@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
+import App from './App'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import BookList from './components/BookList'
 import Home from './pages/Home'
@@ -12,7 +12,7 @@ import Profile from './pages/Profile'
 import MyLoans from './pages/MyLoans'
 import ProtectedRoute from './components/ProtectedRoute'
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
