@@ -25,8 +25,12 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-start mb-3">
             <h1 className="text-3xl font-bold text-gray-900">📚 Library System</h1>
-            <div className="flex gap-2 items-center">
-              {user && <span className="text-sm text-gray-600">Welcome, {user.name || user.email}</span>}
+            <div className="flex gap-4 items-center">
+              {user && (
+                <Link to="/profile" className="text-purple-600 hover:text-purple-800 font-medium text-sm">
+                  👤 {user.name || user.email}
+                </Link>
+              )}
               {user ? (
                 <button
                   onClick={handleLogout}
