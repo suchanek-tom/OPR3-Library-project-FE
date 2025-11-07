@@ -45,6 +45,12 @@ const App = () => {
             <Link to="/" className="text-blue-600 hover:text-blue-800 font-medium">Home</Link>
             <span className="text-gray-300">|</span>
             <Link to="/books" className="text-blue-600 hover:text-blue-800 font-medium">Books</Link>
+            {user && user.role === 'ROLE_ADMIN' && (
+              <>
+                <span className="text-gray-300">|</span>
+                <Link to="/books/add" className="text-green-600 hover:text-green-800 font-medium">+ Add Book</Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
