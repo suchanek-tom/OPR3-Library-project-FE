@@ -1,14 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Book } from "../types/Book";
+import { User } from "../types/User";
+import { Loan } from "../types/Loan";
 import LoanButton from "../components/LoanButton";
+import ReturnButton from "../components/ReturnButton";
 
-const BookDetail = () => {
+const BookDetail: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
-  
+  const [user, setUser] = useState<User | null>(null);
+  const [userLoan, setUserLoan] = useState<Loan | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   useEffect(() => {
     if (!id) return setLoading(false);
@@ -25,42 +36,98 @@ const BookDetail = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (!user || !book) return;
+
+    const checkUserLoan = async () => {
+      try {
+        const response = await fetch(`/api/loans`);
+        if (!response.ok) throw new Error("Failed to load loans");
+
+        const loans = await response.json();
+        const activeLoan = loans.find(
+          (loan: Loan) =>
+            loan.user?.id === user.id &&
+            loan.book?.id === book.id &&
+            loan.status === "ACTIVE"
+        );
+        setUserLoan(activeLoan || null);
+      } catch (err) {
+        console.error("Failed to check user loans:", err);
+      }
+    };
+
+    checkUserLoan();
+  }, [user, book]);
+
   if (loading) return <p className="text-gray-500 text-center py-8">Loading...</p>;
   if (!book) return <p className="text-gray-500 text-center py-8">Book not found</p>;
 
- 
-  const handleBorrowSuccess = (data?: Book) => {
-    if (data) setBook(data)
-    else setBook((prev) => (prev ? { ...prev, available: false } : prev))
-  }
+  const handleBorrowSuccess = () => {
+    if (id) {
+      fetch(`/api/books/${id}`)
+        .then((res) => res.json())
+        .then((data) => setBook(data));
+    }
+    if (user) {
+      fetch(`/api/loans`)
+        .then((res) => res.json())
+        .then((loans) => {
+          const activeLoan = loans.find(
+            (loan: Loan) =>
+              loan.user?.id === user.id &&
+              loan.book?.id === book.id &&
+              loan.status === "ACTIVE"
+          );
+          setUserLoan(activeLoan || null);
+        });
+    }
+  };
+
+  const handleReturnSuccess = () => {
+    setUserLoan(null);
+    if (id) {
+      fetch(`/api/books/${id}`)
+        .then((res) => res.json())
+        .then((data) => setBook(data));
+    }
+  };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl">
-      <button 
-        onClick={() => navigate(-1)} 
-        className="mb-4 text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+    <div className="bg-white p-8 rounded-lg shadow">
+      <button
+        onClick={() => navigate("/books")}
+        className="text-blue-600 hover:text-blue-800 mb-4"
       >
-        ← Back
+        ← Back to Books
       </button>
-      <h2 className="text-3xl font-bold text-gray-900 mb-4">{book.title}</h2>
-      
-      <div className="space-y-2 mb-6 text-gray-700">
-        {book.author && <p><span className="font-semibold">Author:</span> {book.author}</p>}
-        {(book as any).content && <p className="mt-4"><span className="font-semibold">Description:</span> {(book as any).content}</p>}
-        {(book as any).publicationYear && <p><span className="font-semibold">Publication Year:</span> {(book as any).publicationYear}</p>}
-        {(book as any).isbn && <p><span className="font-semibold">ISBN:</span> {(book as any).isbn}</p>}
+      <h1 className="text-4xl font-bold mb-4">{book.title}</h1>
+      <p className="text-lg text-gray-600 mb-2">
+        <span className="font-semibold">Author:</span> {book.author}
+      </p>
+      <p className="text-gray-600 mb-2">
+        <span className="font-semibold">ISBN:</span> {book.isbn}
+      </p>
+      <p className="text-gray-600 mb-2">
+        <span className="font-semibold">Year:</span> {book.publicationYear}
+      </p>
+      <p className="text-gray-700 mb-6">{book.content}</p>
+      <div className="flex gap-4 items-center">
+        {userLoan ? (
+          <ReturnButton 
+            loanId={userLoan.id} 
+            onSuccess={handleReturnSuccess} 
+            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
+          />
+        ) : book.available ? (
+          <LoanButton 
+            bookId={book.id} 
+            onSuccess={handleBorrowSuccess} 
+          />
+        ) : (
+          <p className="text-red-600 font-semibold">Book is not available</p>
+        )}
       </div>
-
-      {book.available ? (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <p className="text-green-700 font-medium mb-3">Status: Available</p>
-          <LoanButton bookId={String(id)} onSuccess={handleBorrowSuccess} />
-        </div>
-      ) : (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-700 font-medium">Status: Unavailable</p>
-        </div>
-      )}
     </div>
   );
 };
