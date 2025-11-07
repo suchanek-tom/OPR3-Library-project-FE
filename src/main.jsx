@@ -7,6 +7,7 @@ import BookList from './components/BookList'
 import Home from './pages/Home'
 import BookDetail from './pages/BookDetail'
 import Login from './pages/Login'
+import AddBook from './pages/AddBook'
 import ProtectedRoute from './components/ProtectedRoute'
 
 createRoot(document.getElementById('root')).render(
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')).render(
           <Route index element={<Home />} />
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />
+          <Route path="books/add" element={<AddBook />} />
         </Route>
         <Route path="*" element={<div className="text-center py-8">Page Not Found</div>} />
       </Routes>
