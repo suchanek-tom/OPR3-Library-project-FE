@@ -14,8 +14,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client"]
 
-    /* Linting */
+    /* Linting */,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

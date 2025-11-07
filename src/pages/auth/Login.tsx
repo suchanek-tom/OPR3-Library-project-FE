@@ -1,5 +1,5 @@
 import { useState, FC, FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Login: FC = () => {
   const [email, setEmail] = useState<string>('')
@@ -100,8 +100,11 @@ const Login: FC = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account? <span className="text-blue-600">Contact an admin</span>
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+            Register here
+          </Link>
         </p>
       </div>
     </div>

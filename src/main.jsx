@@ -1,24 +1,22 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App'
+import App from './App.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import BookList from './components/BookList'
 import Home from './pages/Home'
 import BookDetail from './pages/BookDetail'
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
+import Login from './pages/auth/Login.js'
 import AddBook from './pages/AddBook'
 import Profile from './pages/Profile'
 import MyLoans from './pages/MyLoans'
 import ProtectedRoute from './components/ProtectedRoute'
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route
           path="/"
           element={
