@@ -14,7 +14,7 @@ const Login = () => {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch('http://localhost:8080/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,16 +22,15 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Invalid credentials')
+        throw new Error(data || 'Invalid credentials')
       }
 
-      const data = await response.json()
-      // Store token in localStorage
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
+      localStorage.setItem('user', JSON.stringify(data))
+      localStorage.setItem('token', data.id)
       
-      // Redirect to home
       navigate('/')
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.')
