@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Book } from "../types/Book";
+import { User } from "../types/User";
 import BookSearch from "./BookSearch";
 
 export default function BookList() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [deleting, setDeleting] = useState<number | null>(null);
 
   useEffect(() => {
@@ -52,9 +53,12 @@ export default function BookList() {
         return res.json();
       })
       .then(data => {
-        setBooks(data.content ?? data);
+        const bookList = Array.isArray(data) ? data : data.content ?? [];
+        setBooks(bookList);
       })
-      .catch(console.error)
+      .catch(err => {
+        console.error("Error loading books:", err);
+      })
       .finally(() => setLoading(false));
   }, []);
 
