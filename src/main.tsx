@@ -12,7 +12,7 @@ import AddBook from './pages/AddBook'
 import Profile from './pages/Profile'
 import MyLoans from './pages/MyLoans'
 import AdminUsers from './pages/AdminUsers'
-import ProtectedRoute from './components/ProtectedRoute'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

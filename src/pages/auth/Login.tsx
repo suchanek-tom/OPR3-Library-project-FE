@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { LoginFormInputs } from '../../types/User'
-import AuthLink from '../../components/AuthLink'
+import AuthLink from '../../components/auth/AuthLink'
 
 const Login: FC = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({

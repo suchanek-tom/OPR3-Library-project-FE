@@ -2,7 +2,7 @@ import { useState, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { RegisterFormInputs } from '../../types/User'
-import AuthLink from '../../components/AuthLink'
+import AuthLink from '../../components/auth/AuthLink'
 
 const Register: FC = () => {
   const navigate = useNavigate()
