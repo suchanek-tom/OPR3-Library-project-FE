@@ -28,8 +28,7 @@ export interface StatCard {
   color: string
 }
 
-
-export interface LoginRequest {
+export interface LoginFormInputs {
   email: string
   password: string
 }
