@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { RegisterFormInputs } from '../../types/Auth'
 import AuthLink from '../../components/auth/AuthLink'
+import ErrorMessage from '../../components/ErrorMessage'
 
 
 const Register: FC = () => {
@@ -233,11 +234,7 @@ const Register: FC = () => {
             )}
           </div>
 
-          {apiError && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-              {apiError}
-            </div>
-          )}
+          {apiError && <ErrorMessage message={apiError} />}
 
           <button
             type="submit"

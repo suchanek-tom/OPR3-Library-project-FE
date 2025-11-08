@@ -1,23 +1,27 @@
-import { useState, useEffect, FC, FormEvent, ChangeEvent } from 'react'
+import { useEffect, FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import { User } from '../types/User'
 import { BookFormData } from '../types/Book'
+import ErrorMessage from '../components/ErrorMessage'
 
 const AddBook: FC = () => {
   const navigate = useNavigate()
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
-  const [formData, setFormData] = useState<BookFormData>({
-    title: '',
-    author: '',
-    isbn: '',
-    publicationYear: new Date().getFullYear(),
-    available: true,
-    content: '',
-  })
-  const [formLoading, setFormLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
+  const [apiError, setApiError] = useState<string>('')
   const [success, setSuccess] = useState<string>('')
+
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<BookFormData>({
+    defaultValues: {
+      title: '',
+      author: '',
+      isbn: '',
+      publicationYear: new Date().getFullYear(),
+      available: true,
+      content: '',
+    },
+  })
 
   useEffect(() => {
     const user = localStorage.getItem('user')
@@ -29,6 +33,34 @@ const AddBook: FC = () => {
     }
     setLoading(false)
   }, [])
+
+  const onSubmit = async (data: BookFormData) => {
+    setApiError('')
+    setSuccess('')
+
+    try {
+      const response = await fetch('http://localhost:8080/api/books', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        throw new Error(responseData.message || 'Failed to add book')
+      }
+
+      setSuccess('Book added successfully!')
+      reset()
+
+      setTimeout(() => navigate('/books'), 2000)
+    } catch (err: any) {
+      setApiError(err.message || 'Failed to add book. Please try again.')
+    }
+  }
 
   if (loading) {
     return <div className="text-center py-8">Loading...</div>
@@ -49,60 +81,11 @@ const AddBook: FC = () => {
     )
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target
-    const checked = (e.target as HTMLInputElement).checked
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : type === 'number' ? parseInt(value) : value
-    }))
-  }
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError('')
-    setSuccess('')
-    setFormLoading(true)
-
-    try {
-      const response = await fetch('http://localhost:8080/api/books', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to add book')
-      }
-
-      setSuccess('Book added successfully!')
-      setFormData({
-        title: '',
-        author: '',
-        isbn: '',
-        publicationYear: new Date().getFullYear(),
-        available: true,
-        content: '',
-      })
-
-      setTimeout(() => navigate('/books'), 2000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to add book. Please try again.')
-    } finally {
-      setFormLoading(false)
-    }
-  }
-
   return (
     <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
       <h2 className="text-3xl font-bold text-gray-900 mb-6">Add New Book</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
             Title *
@@ -110,13 +93,19 @@ const AddBook: FC = () => {
           <input
             id="title"
             type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
+            {...register('title', {
+              required: 'Title is required',
+              minLength: {
+                value: 3,
+                message: 'Title must be at least 3 characters',
+              },
+            })}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             placeholder="Enter book title"
           />
+          {errors.title && (
+            <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
+          )}
         </div>
 
         <div>
@@ -126,13 +115,19 @@ const AddBook: FC = () => {
           <input
             id="author"
             type="text"
-            name="author"
-            value={formData.author}
-            onChange={handleChange}
-            required
+            {...register('author', {
+              required: 'Author is required',
+              minLength: {
+                value: 2,
+                message: 'Author must be at least 2 characters',
+              },
+            })}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             placeholder="Enter author name"
           />
+          {errors.author && (
+            <p className="text-red-600 text-sm mt-1">{errors.author.message}</p>
+          )}
         </div>
 
         <div>
@@ -142,12 +137,18 @@ const AddBook: FC = () => {
           <input
             id="isbn"
             type="text"
-            name="isbn"
-            value={formData.isbn}
-            onChange={handleChange}
+            {...register('isbn', {
+              minLength: {
+                value: 10,
+                message: 'ISBN must be at least 10 characters',
+              },
+            })}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             placeholder="Enter ISBN number"
           />
+          {errors.isbn && (
+            <p className="text-red-600 text-sm mt-1">{errors.isbn.message}</p>
+          )}
         </div>
 
         <div>
@@ -157,15 +158,24 @@ const AddBook: FC = () => {
           <input
             id="publicationYear"
             type="number"
-            name="publicationYear"
-            value={formData.publicationYear}
-            onChange={handleChange}
-            required
-            min="1000"
-            max={new Date().getFullYear()}
+            {...register('publicationYear', {
+              required: 'Publication year is required',
+              min: {
+                value: 1000,
+                message: 'Year must be 1000 or later',
+              },
+              max: {
+                value: new Date().getFullYear(),
+                message: `Year cannot be in the future`,
+              },
+              valueAsNumber: true,
+            })}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             placeholder="Enter publication year"
           />
+          {errors.publicationYear && (
+            <p className="text-red-600 text-sm mt-1">{errors.publicationYear.message}</p>
+          )}
         </div>
 
         <div>
@@ -174,22 +184,26 @@ const AddBook: FC = () => {
           </label>
           <textarea
             id="content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
+            {...register('content', {
+              maxLength: {
+                value: 10000,
+                message: 'Content must not exceed 10000 characters',
+              },
+            })}
             rows={4}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
             placeholder="Enter book description or content"
           />
+          {errors.content && (
+            <p className="text-red-600 text-sm mt-1">{errors.content.message}</p>
+          )}
         </div>
 
         <div className="flex items-center">
           <input
             id="available"
             type="checkbox"
-            name="available"
-            checked={formData.available}
-            onChange={handleChange}
+            {...register('available')}
             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
           />
           <label htmlFor="available" className="ml-2 text-sm font-medium text-gray-700">
@@ -197,11 +211,7 @@ const AddBook: FC = () => {
           </label>
         </div>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
+        {apiError && <ErrorMessage message={apiError} />}
 
         {success && (
           <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
@@ -212,10 +222,10 @@ const AddBook: FC = () => {
         <div className="flex gap-4 pt-4">
           <button
             type="submit"
-            disabled={formLoading}
+            disabled={isSubmitting}
             className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition-colors"
           >
-            {formLoading ? 'Adding Book...' : 'Add Book'}
+            {isSubmitting ? 'Adding Book...' : 'Add Book'}
           </button>
           <button
             type="button"
