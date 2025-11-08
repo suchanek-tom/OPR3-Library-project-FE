@@ -32,3 +32,12 @@ export interface AvailabilityFilterProps extends AvailabilityBadgeProps {
   onClick: () => void;
   isActive: boolean;
 }
+
+export interface DeleteButtonProps {
+  bookId: number;
+  bookTitle?: string;
+  onSuccess?: () => void;
+  className?: string;
+  showMessage?: boolean;
+  onClick?: (e: React.MouseEvent) => void;
+}

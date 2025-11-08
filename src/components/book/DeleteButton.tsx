@@ -1,14 +1,7 @@
 import { useState, FC } from "react";
+import { FiTrash2 } from "react-icons/fi";
 import Modal from "../Modal";
-
-interface DeleteButtonProps {
-  bookId: number;
-  bookTitle?: string;
-  onSuccess?: () => void;
-  className?: string;
-  showMessage?: boolean;
-  onClick?: (e: React.MouseEvent) => void;
-}
+import { DeleteButtonProps } from "../../types/Book";
 
 const DeleteButton: FC<DeleteButtonProps> = ({ 
   bookId, 
@@ -64,13 +57,13 @@ const DeleteButton: FC<DeleteButtonProps> = ({
   };
 
   return (
-    <div>
+    <div className="flex items-center justify-center h-full">
       <button
         onClick={handleDeleteButtonClick}
         disabled={deleting}
-        className={className || "bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-bold py-2 px-4 rounded transition-colors"}
+        className={className || "bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-bold py-3 px-6 rounded transition-colors flex items-center gap-3 text-lg"}
       >
-        {deleting ? '🗑️' : '🗑️'}
+        <FiTrash2 size={24} />
       </button>
       <Modal
         isOpen={showModal}
