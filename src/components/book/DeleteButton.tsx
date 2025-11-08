@@ -1,5 +1,5 @@
 import { useState, FC } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 interface DeleteButtonProps {
   bookId: number;

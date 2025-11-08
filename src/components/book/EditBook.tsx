@@ -1,6 +1,6 @@
 import { useState, FC, FormEvent, ChangeEvent } from "react";
-import { Book, EditBookProps } from "../types/Book";
-import { updateBook } from "../utils/bookApi";
+import { Book, EditBookProps } from "../../types/Book";
+import { updateBook } from "../../utils/bookApi";
 
 
 const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {

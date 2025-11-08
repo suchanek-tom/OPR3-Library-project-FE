@@ -1,12 +1,12 @@
-import { useEffect, useState, FC } from "react";
+import { useEffect, useState, FC, SetStateAction } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Book } from "../types/Book";
 import { User, UserRole } from "../types/User";
 import { Loan } from "../types/Loan";
-import LoanButton from "../components/LoanButton";
-import ReturnButton from "../components/ReturnButton";
-import DeleteButton from "../components/DeleteButton";
-import EditBook from "../components/EditBook";
+import LoanButton from "../components/loan/LoanButton";
+import ReturnButton from "../components/loan/ReturnButton";
+import DeleteButton from "../components/book/DeleteButton";
+import EditBook from "../components/book/EditBook";
 
 const BookDetail: FC = () => {
   const { id } = useParams();
@@ -118,7 +118,7 @@ const BookDetail: FC = () => {
         {user?.role === UserRole.ROLE_ADMIN ? (
           <EditBook
             book={book}
-            onSuccess={(updatedBook) => setBook(updatedBook)}
+            onSuccess={(updatedBook: SetStateAction<Book | null>) => setBook(updatedBook)}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           />
         ) : userLoan ? (
