@@ -1,15 +1,7 @@
 import { useState, useEffect, FC, FormEvent, ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '../types/User'
-
-interface BookFormData {
-  title: string
-  author: string
-  isbn: string
-  publicationYear: number
-  available: boolean
-  content: string
-}
+import { BookFormData } from '../types/Book'
 
 const AddBook: FC = () => {
   const navigate = useNavigate()
@@ -111,7 +103,6 @@ const AddBook: FC = () => {
       <h2 className="text-3xl font-bold text-gray-900 mb-6">Add New Book</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Title */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
             Title *
@@ -128,7 +119,6 @@ const AddBook: FC = () => {
           />
         </div>
 
-        {/* Author */}
         <div>
           <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-1">
             Author *
@@ -145,7 +135,6 @@ const AddBook: FC = () => {
           />
         </div>
 
-        {/* ISBN */}
         <div>
           <label htmlFor="isbn" className="block text-sm font-medium text-gray-700 mb-1">
             ISBN
@@ -161,7 +150,6 @@ const AddBook: FC = () => {
           />
         </div>
 
-        {/* Publication Year */}
         <div>
           <label htmlFor="publicationYear" className="block text-sm font-medium text-gray-700 mb-1">
             Publication Year *
@@ -211,21 +199,18 @@ const AddBook: FC = () => {
           </label>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
             {error}
           </div>
         )}
 
-        {/* Success Message */}
         {success && (
           <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
             {success}
           </div>
         )}
 
-        {/* Buttons */}
         <div className="flex gap-4 pt-4">
           <button
             type="submit"

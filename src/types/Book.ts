@@ -7,3 +7,12 @@ export interface Book {
   available: boolean;
   author: string;
 }
+
+export interface BookFormData {
+  title: string
+  author: string
+  isbn: string
+  publicationYear: number
+  available: boolean
+  content: string
+}
