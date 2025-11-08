@@ -1,7 +1,8 @@
 import { useState, FC } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { RegisterFormInputs } from '../../types/User'
+import AuthLink from '../../components/AuthLink'
 
 const Register: FC = () => {
   const navigate = useNavigate()
@@ -246,12 +247,11 @@ const Register: FC = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:text-blue-800 font-medium">
-            Login here
-          </Link>
-        </p>
+        <AuthLink
+          text="Already have an account?"
+          linkText="Login here"
+          linkTo="/login"
+        />
       </div>
     </div>
   )

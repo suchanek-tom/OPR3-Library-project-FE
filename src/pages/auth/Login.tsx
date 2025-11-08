@@ -1,7 +1,8 @@
 import { FC, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { LoginFormInputs } from '../../types/User'
+import AuthLink from '../../components/AuthLink'
 
 const Login: FC = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({
@@ -115,12 +116,11 @@ const Login: FC = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium">
-            Register here
-          </Link>
-        </p>
+        <AuthLink
+          text="Don't have an account?"
+          linkText="Register here"
+          linkTo="/register"
+        />
       </div>
     </div>
   )
