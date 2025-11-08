@@ -60,7 +60,6 @@ const Register: FC = () => {
         throw new Error(data.message || 'Registration failed')
       }
 
-      // Auto-login after successful registration
       localStorage.setItem('user', JSON.stringify(data))
       localStorage.setItem('token', data.id)
       
@@ -78,7 +77,6 @@ const Register: FC = () => {
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">📚 Library Registration</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* First Name */}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
               First Name *
@@ -95,7 +93,6 @@ const Register: FC = () => {
             />
           </div>
 
-          {/* Last Name */}
           <div>
             <label htmlFor="surname" className="block text-sm font-medium text-gray-700 mb-1">
               Last Name *
@@ -112,7 +109,6 @@ const Register: FC = () => {
             />
           </div>
 
-          {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email *
@@ -129,7 +125,6 @@ const Register: FC = () => {
             />
           </div>
 
-          {/* Address */}
           <div>
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
               Address *
@@ -146,7 +141,6 @@ const Register: FC = () => {
             />
           </div>
 
-          {/* City */}
           <div>
             <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
               City *
@@ -163,7 +157,6 @@ const Register: FC = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password *
@@ -189,7 +182,6 @@ const Register: FC = () => {
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
               Confirm Password *
@@ -215,14 +207,12 @@ const Register: FC = () => {
             </div>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -232,7 +222,6 @@ const Register: FC = () => {
           </button>
         </form>
 
-        {/* Login Link */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Already have an account?{' '}
           <Link to="/login" className="text-blue-600 hover:text-blue-800 font-medium">

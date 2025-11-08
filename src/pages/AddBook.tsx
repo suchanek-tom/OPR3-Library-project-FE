@@ -168,7 +168,6 @@ const AddBook: FC = () => {
           />
         </div>
 
-        {/* Content/Description */}
         <div>
           <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
             Description/Content
@@ -184,7 +183,6 @@ const AddBook: FC = () => {
           />
         </div>
 
-        {/* Available Checkbox */}
         <div className="flex items-center">
           <input
             id="available"

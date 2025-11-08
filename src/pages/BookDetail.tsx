@@ -116,14 +116,12 @@ const BookDetail: FC = () => {
       <p className="text-gray-700 mb-6">{book.content}</p>
       <div className="flex gap-4 items-center">
         {user?.role === UserRole.ROLE_ADMIN ? (
-          // Admins can edit book details
           <EditBook
             book={book}
             onSuccess={(updatedBook) => setBook(updatedBook)}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           />
         ) : userLoan ? (
-          // Users with active loan can return
           <ReturnButton 
             loanId={userLoan.id} 
             onSuccess={handleReturnSuccess} 
