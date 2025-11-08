@@ -4,6 +4,7 @@ import { Book } from "../../types/Book";
 import { User } from "../../types/User";
 import BookSearch from "./BookSearch";
 import DeleteButton from "./DeleteButton";
+import AvailabilityBadge from "./AvailabilityBadge";
 
 
 export default function BookList() {
@@ -84,13 +85,7 @@ export default function BookList() {
                 className="border rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer h-full relative border-gray-300"
               >
                 <h3 className="font-semibold text-blue-600 hover:text-blue-800 text-lg">{b.title}</h3>
-                <span className={`w-fit px-2 py-1 rounded-full text-xs font-semibold mt-1 block ${
-                  b.available 
-                    ? "bg-green-100 text-green-700" 
-                    : "bg-red-100 text-red-700"
-                }`}>
-                  {b.available ? "Available" : "Unavailable"}
-                </span>
+                <AvailabilityBadge available={b.available} />
                 {(b as any).authors && (b as any).authors.length > 0 && (
                   <p className="text-gray-600 text-sm mt-2">By: {(b as any).authors.map((a: any) => a.name).join(", ")}</p>
                 )}
