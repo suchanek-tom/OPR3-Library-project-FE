@@ -1,7 +1,9 @@
 import { useState, useEffect, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User } from '../types/User'
+import { User, UserRole } from '../types/User'
 import { Loan, LoanStatus } from '../types/Loan'
+import { getStatusBadge, formatDate } from '../utils/loanUtils'
+import { fetchAllLoans, filterLoansByRole, returnLoan } from '../utils/loanApi'
 
 const MyLoans: FC = () => {
   const navigate = useNavigate()
@@ -23,21 +25,12 @@ const MyLoans: FC = () => {
     const loadLoans = async () => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:8080/api/loans')
-        
-        if (!response.ok) {
-          throw new Error('Failed to load loans')
-        }
-
-        const data = await response.json()
-        const userLoans = Array.isArray(data) 
-          ? data.filter((loan: Loan) => loan.user?.id === user.id)
-          : data.content?.filter((loan: Loan) => loan.user?.id === user.id) || []
-        
-        setLoans(userLoans)
+        const allLoans = await fetchAllLoans()
+        const filteredLoans = filterLoansByRole(allLoans, user.id, user.role)
+        setLoans(filteredLoans)
         setError('')
       } catch (err) {
-        setError('Failed to load your loans')
+        setError('Failed to load loans')
         console.error(err)
       } finally {
         setLoading(false)
@@ -53,17 +46,7 @@ const MyLoans: FC = () => {
 
     setReturning(loanId)
     try {
-      const response = await fetch(`http://localhost:8080/api/loans/return/${loanId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to return loan')
-      }
-
+      await returnLoan(loanId)
       setLoans(loans.map(loan => 
         loan.id === loanId 
           ? { ...loan, status: 'RETURNED' as LoanStatus }
@@ -78,21 +61,7 @@ const MyLoans: FC = () => {
     }
   }
 
-  const getStatusBadge = (status: LoanStatus | string): string => {
-    if (status === 'ACTIVE') {
-      return 'bg-yellow-100 text-yellow-800'
-    } else {
-      return 'bg-green-100 text-green-800'
-    }
-  }
 
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
 
   if (loading) {
     return <div className="text-center py-8">Loading your loans...</div>
@@ -103,7 +72,14 @@ const MyLoans: FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">My Loans</h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        {user?.role === UserRole.ROLE_ADMIN ? 'All Loans' : 'My Loans'}
+      </h2>
+      <p className="text-gray-600 mb-6">
+        {user?.role === UserRole.ROLE_ADMIN 
+          ? 'View all borrowed books from all users' 
+          : 'View your borrowed books'}
+      </p>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -131,19 +107,26 @@ const MyLoans: FC = () => {
                 <p className="text-gray-600 mb-1">
                   <span className="font-medium">Author:</span> {loan.book?.author || 'Unknown'}
                 </p>
+                {user?.role === UserRole.ROLE_ADMIN && loan.user && (
+                  <p className="text-gray-600 mb-1">
+                    <span className="font-medium">Borrowed by:</span> {loan.user.name} ({loan.user.email})
+                  </p>
+                )}
                 <p className="text-gray-600 mb-4">
                   <span className="font-medium">Borrowed:</span> {formatDate(loan.loanDate)}
                 </p>
                 <span className={`inline-block px-3 py-1 rounded-full font-semibold text-sm mb-4 ${getStatusBadge(loan.status)}`}>
                   {loan.status}
                 </span>
-                <button
-                  onClick={() => handleReturnLoan(loan.id)}
-                  disabled={returning === loan.id}
-                  className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition-colors"
-                >
-                  {returning === loan.id ? 'Returning...' : 'Return Book'}
-                </button>
+                {user?.role !== UserRole.ROLE_ADMIN && (
+                  <button
+                    onClick={() => handleReturnLoan(loan.id)}
+                    disabled={returning === loan.id}
+                    className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition-colors"
+                  >
+                    {returning === loan.id ? 'Returning...' : 'Return Book'}
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -170,6 +153,11 @@ const MyLoans: FC = () => {
                 <p className="text-gray-600 mb-1">
                   <span className="font-medium">Author:</span> {loan.book?.author || 'Unknown'}
                 </p>
+                {user?.role === UserRole.ROLE_ADMIN && loan.user && (
+                  <p className="text-gray-600 mb-1">
+                    <span className="font-medium">Borrowed by:</span> {loan.user.name} ({loan.user.email})
+                  </p>
+                )}
                 <p className="text-gray-600 mb-1">
                   <span className="font-medium">Borrowed:</span> {formatDate(loan.loanDate)}
                 </p>
