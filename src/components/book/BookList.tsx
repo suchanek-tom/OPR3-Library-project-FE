@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Book } from "../types/Book";
-import { User } from "../types/User";
+import { Book } from "../../types/Book";
+import { User } from "../../types/User";
 import BookSearch from "./BookSearch";
 import DeleteButton from "./DeleteButton";
+
 
 export default function BookList() {
   const [books, setBooks] = useState<Book[]>([]);

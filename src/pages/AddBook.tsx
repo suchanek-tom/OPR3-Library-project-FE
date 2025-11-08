@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { User } from '../types/User'
 import { BookFormData } from '../types/Book'
-import ErrorMessage from '../components/ErrorMessage'
-import SuccessMessage from '../components/SuccessMessage'
+import ErrorMessage from '../components/form/ErrorMessage'
+import SuccessMessage from '../components/form/SuccessMessage'
 
 const AddBook: FC = () => {
   const navigate = useNavigate()

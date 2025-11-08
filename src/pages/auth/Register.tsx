@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { RegisterFormInputs } from '../../types/Auth'
 import AuthLink from '../../components/auth/AuthLink'
-import ErrorMessage from '../../components/ErrorMessage'
+import ErrorMessage from '../../components/form/ErrorMessage'
 
 
 const Register: FC = () => {

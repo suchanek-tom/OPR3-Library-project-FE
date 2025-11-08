@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Book, EditBookProps } from "../../types/Book";
 import { updateBook } from "../../utils/bookApi";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "../form/ErrorMessage";
 
 const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
   const [isEditing, setIsEditing] = useState(false);
