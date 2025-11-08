@@ -22,6 +22,13 @@ export interface Loan {
   }
 }
 
+export interface LoanBadge {
+  key: 'borrowed' | 'returned' | 'total'
+  label: string
+  bgColor: string
+  textColor: string
+}
+
 export interface BorrowRequest {
   bookId: number
   userId: number

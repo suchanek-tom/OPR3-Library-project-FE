@@ -53,13 +53,15 @@ const App = () => {
             {user && (
               <>
                 <span className="text-gray-300">|</span>
-                <Link to="/loans" className="text-blue-600 hover:text-blue-800 font-medium">My Loans</Link>
+                <Link to="/loans" className="text-blue-600 hover:text-blue-800 font-medium">Loans</Link>
               </>
             )}
             {user && user.role === 'ROLE_ADMIN' && (
               <>
                 <span className="text-gray-300">|</span>
                 <Link to="/books/add" className="text-green-600 hover:text-green-800 font-medium">+ Add Book</Link>
+                <span className="text-gray-300">|</span>
+                <Link to="/admin/users" className="text-red-600 hover:text-red-800 font-medium">Admin Panel</Link>
               </>
             )}
           </nav>

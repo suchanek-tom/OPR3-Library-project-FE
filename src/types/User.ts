@@ -14,6 +14,21 @@ export interface User {
   role: UserRole
 }
 
+export interface UserWithStats extends User {
+  loanStats: {
+    borrowed: number
+    returned: number
+    total: number
+  }
+}
+
+export interface StatCard {
+  label: string
+  value: number
+  color: string
+}
+
+
 export interface LoginRequest {
   email: string
   password: string
