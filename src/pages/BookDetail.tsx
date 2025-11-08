@@ -1,10 +1,11 @@
 import { useEffect, useState, FC } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Book } from "../types/Book";
-import { User } from "../types/User";
+import { User, UserRole } from "../types/User";
 import { Loan } from "../types/Loan";
 import LoanButton from "../components/LoanButton";
 import ReturnButton from "../components/ReturnButton";
+import DeleteButton from "../components/DeleteButton";
 
 const BookDetail: FC = () => {
   const { id } = useParams();
@@ -126,6 +127,14 @@ const BookDetail: FC = () => {
           />
         ) : (
           <p className="text-red-600 font-semibold">Book is not available</p>
+        )}
+        {user?.role === UserRole.ROLE_ADMIN && (
+          <DeleteButton 
+            bookId={book.id}
+            bookTitle={book.title}
+            onSuccess={() => navigate('/books')}
+            className="bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-bold py-2 px-4 rounded transition-colors"
+          />
         )}
       </div>
     </div>

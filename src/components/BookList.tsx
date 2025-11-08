@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { Book } from "../types/Book";
 import { User } from "../types/User";
 import BookSearch from "./BookSearch";
+import DeleteButton from "./DeleteButton";
 
 export default function BookList() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [user, setUser] = useState<User | null>(null);
-  const [deleting, setDeleting] = useState<number | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -17,34 +17,6 @@ export default function BookList() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
-  const handleDeleteBook = async (e: React.MouseEvent, bookId: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!window.confirm("Are you sure you want to delete this book?")) {
-      return;
-    }
-
-    setDeleting(bookId);
-    try {
-      const response = await fetch(`/api/books/${bookId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete book");
-      }
-
-      setBooks(books.filter(b => b.id !== bookId));
-      alert("Book deleted successfully!");
-    } catch (error) {
-      console.error("Delete error:", error);
-      alert("Error deleting book. Please try again.");
-    } finally {
-      setDeleting(null);
-    }
-  };
 
   useEffect(() => {
     fetch("/api/books")
@@ -96,14 +68,17 @@ export default function BookList() {
                   <p className="text-gray-600 text-sm mt-2">By: {(b as any).authors.map((a: any) => a.name).join(", ")}</p>
                 )}
                 {isAdmin && (
-                  <button
-                    onClick={(e) => handleDeleteBook(e, b.id)}
-                    disabled={deleting === b.id}
+                  <DeleteButton
+                    bookId={b.id}
+                    bookTitle={b.title}
+                    onSuccess={() => setBooks(books.filter(book => book.id !== b.id))}
+                    showMessage={false}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
                     className="absolute top-2 right-2 text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-all disabled:opacity-50"
-                    title="Delete book"
-                  >
-                    {deleting === b.id ? "⏳" : "🗑️"}
-                  </button>
+                  />
                 )}
               </li>
             </Link>
