@@ -16,3 +16,9 @@ export interface BookFormData {
   available: boolean
   content: string
 }
+
+export interface EditBookProps {
+  book: Book;
+  onSuccess: (updatedBook: Book) => void;
+  className?: string;
+}
