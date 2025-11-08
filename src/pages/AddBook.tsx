@@ -85,7 +85,6 @@ const AddBook: FC = () => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
       <h2 className="text-3xl font-bold text-gray-900 mb-6">Add New Book</h2>
-
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">

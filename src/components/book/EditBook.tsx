@@ -1,48 +1,34 @@
-import { useState, FC, FormEvent, ChangeEvent } from "react";
+import { FC, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Book, EditBookProps } from "../../types/Book";
 import { updateBook } from "../../utils/bookApi";
-
+import ErrorMessage from "../ErrorMessage";
 
 const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
-  const [formData, setFormData] = useState<Partial<Book>>({
-    title: book.title,
-    author: book.author,
-    isbn: book.isbn,
-    publicationYear: book.publicationYear,
-    content: book.content,
-    available: book.available,
+  const [apiError, setApiError] = useState<string>("");
+
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Partial<Book>>({
+    defaultValues: {
+      title: book.title,
+      author: book.author,
+      isbn: book.isbn,
+      publicationYear: book.publicationYear,
+      content: book.content,
+      available: book.available,
+    },
   });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox" ? checked : type === "number" ? parseInt(value) : value,
-    }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  const onSubmit = async (data: Partial<Book>) => {
+    setApiError("");
 
     try {
-      const updatedBook = await updateBook(book.id, formData);
+      const updatedBook = await updateBook(book.id, data);
       onSuccess(updatedBook);
       setIsEditing(false);
       alert("✅ Book updated successfully!");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update book");
-    } finally {
-      setLoading(false);
+      setApiError(err instanceof Error ? err.message : "Failed to update book");
     }
   };
 
@@ -65,75 +51,89 @@ const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
       <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full max-h-full overflow-y-auto">
         <h3 className="text-2xl font-bold mb-4">Edit Book Details</h3>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
-            {error}
-          </div>
-        )}
+        {apiError && <ErrorMessage message={apiError} />}
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div>
             <label className="block text-sm font-medium mb-1">Title</label>
             <input
               type="text"
-              name="title"
-              value={formData.title || ""}
-              onChange={handleChange}
+              {...register("title", {
+                required: "Title is required",
+                minLength: { value: 3, message: "Title must be at least 3 characters" },
+              })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
             />
+            {errors.title && (
+              <p className="text-red-600 text-xs mt-1">{errors.title.message}</p>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Author</label>
             <input
               type="text"
-              name="author"
-              value={formData.author || ""}
-              onChange={handleChange}
+              {...register("author", {
+                required: "Author is required",
+                minLength: { value: 2, message: "Author must be at least 2 characters" },
+              })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
             />
+            {errors.author && (
+              <p className="text-red-600 text-xs mt-1">{errors.author.message}</p>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">ISBN</label>
             <input
               type="text"
-              name="isbn"
-              value={formData.isbn || ""}
-              onChange={handleChange}
+              {...register("isbn", {
+                minLength: { value: 10, message: "ISBN must be at least 10 characters" },
+              })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
             />
+            {errors.isbn && (
+              <p className="text-red-600 text-xs mt-1">{errors.isbn.message}</p>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Publication Year</label>
             <input
               type="number"
-              name="publicationYear"
-              value={formData.publicationYear || ""}
-              onChange={handleChange}
+              {...register("publicationYear", {
+                required: "Publication year is required",
+                min: { value: 1000, message: "Publication year must be at least 1000" },
+                max: { value: new Date().getFullYear(), message: "Publication year cannot be in the future" },
+                valueAsNumber: true,
+              })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
             />
+            {errors.publicationYear && (
+              <p className="text-red-600 text-xs mt-1">{errors.publicationYear.message}</p>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Description</label>
             <textarea
-              name="content"
-              value={formData.content || ""}
-              onChange={handleChange}
+              {...register("content", {
+                maxLength: { value: 10000, message: "Description must be less than 10000 characters" },
+              })}
               rows={2}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none text-sm"
             />
+            {errors.content && (
+              <p className="text-red-600 text-xs mt-1">{errors.content.message}</p>
+            )}
           </div>
 
           <div className="flex items-center">
             <input
               type="checkbox"
               id="available"
-              name="available"
-              checked={formData.available || false}
-              onChange={handleChange}
+              {...register("available")}
               className="w-4 h-4 rounded focus:ring-2 focus:ring-blue-500"
             />
             <label htmlFor="available" className="ml-2 text-sm">
@@ -151,10 +151,10 @@ const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 rounded transition-colors"
             >
-              {loading ? "Saving..." : "Save Changes"}
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>
