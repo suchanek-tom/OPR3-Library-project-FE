@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { User } from '../types/User'
 import { BookFormData } from '../types/Book'
 import ErrorMessage from '../components/ErrorMessage'
+import SuccessMessage from '../components/SuccessMessage'
 
 const AddBook: FC = () => {
   const navigate = useNavigate()
@@ -213,11 +214,7 @@ const AddBook: FC = () => {
 
         {apiError && <ErrorMessage message={apiError} />}
 
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-            {success}
-          </div>
-        )}
+        {success && <SuccessMessage message={success} />}
 
         <div className="flex gap-4 pt-4">
           <button
