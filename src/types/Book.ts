@@ -22,3 +22,13 @@ export interface EditBookProps {
   onSuccess: (updatedBook: Book) => void;
   className?: string;
 }
+
+export interface AvailabilityBadgeProps {
+  available: boolean;
+  className?: string;
+}
+
+export interface AvailabilityFilterProps extends AvailabilityBadgeProps {
+  onClick: () => void;
+  isActive: boolean;
+}

@@ -10,6 +10,7 @@ export default function BookList() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [user, setUser] = useState<User | null>(null);
+  const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -36,9 +37,16 @@ export default function BookList() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return books;
-    return books.filter((b) => (b.title ?? "").toLowerCase().includes(q));
-  }, [books, query]);
+    let result = books;
+    if (q) {
+      result = result.filter((b) => (b.title ?? "").toLowerCase().includes(q));
+    }
+    if (showOnlyAvailable) {
+      result = result.filter((b) => b.available === true);
+    }
+    
+    return result;
+  }, [books, query, showOnlyAvailable]);
 
   if (loading) return <p className="text-gray-500 text-center py-8">Loading...</p>;
 
@@ -48,7 +56,18 @@ export default function BookList() {
     <div className="w-full">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">📚 Library Books</h2>
 
-      <BookSearch query={query} onChange={setQuery} />
+      <div className="flex gap-4 items-center mb-6">
+        <BookSearch query={query} onChange={setQuery} />
+        <label className="flex items-center gap-2 cursor-pointer whitespace-nowrap">
+          <input
+            type="checkbox"
+            checked={showOnlyAvailable}
+            onChange={(e) => setShowOnlyAvailable(e.target.checked)}
+            className="w-4 h-4 rounded accent-green-600 cursor-pointer"
+          />
+          <span className="text-sm font-medium text-gray-700">Show only available</span>
+        </label>
+      </div>
 
       {filtered.length === 0 ? (
         <p className="text-gray-500 text-center py-8">No books found for "{query}"</p>
@@ -61,7 +80,11 @@ export default function BookList() {
               className="no-underline"
             >
               <li 
-                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer h-full relative"
+                className={`border rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer h-full relative ${
+                  b.available 
+                    ? "bg-green-100 " 
+                    : "bg-red-100"
+                }`}
               >
                 <h3 className="font-semibold text-blue-600 hover:text-blue-800 text-lg">{b.title}</h3>
                 {(b as any).authors && (b as any).authors.length > 0 && (
