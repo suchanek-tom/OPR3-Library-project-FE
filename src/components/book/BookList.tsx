@@ -81,28 +81,33 @@ export default function BookList() {
               className="no-underline"
             >
               <li 
-                className={`border rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer h-full relative ${
-                  b.available 
-                    ? "bg-green-100 " 
-                    : "bg-red-100"
-                }`}
+                className="border rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer h-full relative border-gray-300"
               >
                 <h3 className="font-semibold text-blue-600 hover:text-blue-800 text-lg">{b.title}</h3>
+                <span className={`w-fit px-2 py-1 rounded-full text-xs font-semibold mt-1 block ${
+                  b.available 
+                    ? "bg-green-100 text-green-700" 
+                    : "bg-red-100 text-red-700"
+                }`}>
+                  {b.available ? "Available" : "Unavailable"}
+                </span>
                 {(b as any).authors && (b as any).authors.length > 0 && (
                   <p className="text-gray-600 text-sm mt-2">By: {(b as any).authors.map((a: any) => a.name).join(", ")}</p>
                 )}
                 {isAdmin && (
-                  <DeleteButton
-                    bookId={b.id}
-                    bookTitle={b.title}
-                    onSuccess={() => setBooks(books.filter(book => book.id !== b.id))}
-                    showMessage={false}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    className="absolute top-2 right-2 text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-all disabled:opacity-50"
-                  />
+                  <div className="absolute inset-y-0 right-2 flex items-center">
+                    <DeleteButton
+                      bookId={b.id}
+                      bookTitle={b.title}
+                      onSuccess={() => setBooks(books.filter(book => book.id !== b.id))}
+                      showMessage={false}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded transition-colors flex items-center gap-2"
+                    />
+                  </div>
                 )}
               </li>
             </Link>
