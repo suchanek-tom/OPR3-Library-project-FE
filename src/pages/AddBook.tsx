@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { User } from '../types/User'
 import { BookFormData } from '../types/Book'
+import { getAuthHeaders } from '../utils/authHeaders'
 import ErrorMessage from '../components/form/ErrorMessage'
 import SuccessMessage from '../components/form/SuccessMessage'
 
@@ -42,9 +43,7 @@ const AddBook: FC = () => {
     try {
       const response = await fetch('http://localhost:8080/api/books', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       })
 

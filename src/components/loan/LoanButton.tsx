@@ -1,5 +1,6 @@
 import { useState, FC } from 'react'
-import { Book } from '../types/Book'
+import { Book } from '../../types/Book'
+import { getAuthHeaders } from '../../utils/authHeaders'
 
 interface LoanButtonProps {
   bookId: string | number
@@ -26,11 +27,9 @@ const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
       const user = JSON.parse(userStr)
       const userId = user.id
 
-      const res = await fetch(`/api/loans/borrow`, {
+      const res = await fetch(`http://localhost:8080/api/loans/borrow`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           user: { id: userId },
           book: { id: Number(bookId) },

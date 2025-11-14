@@ -36,7 +36,7 @@ const Login: FC = () => {
       }
 
       localStorage.setItem('user', JSON.stringify(responseData))
-      localStorage.setItem('token', responseData.id)
+      localStorage.setItem('token', responseData.token)
       
       navigate('/')
     } catch (err: any) {

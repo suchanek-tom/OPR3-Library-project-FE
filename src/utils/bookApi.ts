@@ -1,4 +1,5 @@
 import { Book } from '../types/Book'
+import { getAuthHeaders } from './authHeaders'
 
 /**
  * Fetch a single book by ID
@@ -7,7 +8,9 @@ import { Book } from '../types/Book'
  * @throws Error if the API call fails
  */
 export const fetchBook = async (bookId: string): Promise<Book> => {
-  const response = await fetch(`/api/books/${bookId}`)
+  const response = await fetch(`http://localhost:8080/api/books/${bookId}`, {
+    headers: getAuthHeaders(),
+  })
   if (!response.ok) throw new Error("Failed to load book")
   return response.json()
 }
@@ -19,9 +22,9 @@ export const fetchBook = async (bookId: string): Promise<Book> => {
  * @throws Error if the API call fails
  */
 export const updateBook = async (bookId: number, bookData: Partial<Book>): Promise<Book> => {
-  const response = await fetch(`/api/books/${bookId}`, {
+  const response = await fetch(`http://localhost:8080/api/books/${bookId}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders(),
     body: JSON.stringify(bookData),
   })
   if (!response.ok) throw new Error("Failed to update book")
@@ -34,7 +37,9 @@ export const updateBook = async (bookId: number, bookData: Partial<Book>): Promi
  * @throws Error if the API call fails
  */
 export const fetchAllLoans = async () => {
-  const response = await fetch(`/api/loans`)
+  const response = await fetch(`http://localhost:8080/api/loans`, {
+    headers: getAuthHeaders(),
+  })
   if (!response.ok) throw new Error("Failed to load loans")
   return response.json()
 }

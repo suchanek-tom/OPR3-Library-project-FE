@@ -8,7 +8,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
   const token = localStorage.getItem('token')
   
-  if (!token) {
+  // Check if token exists and is not just a user ID
+  if (!token || token.length < 10) {
     return <Navigate to="/login" replace />
   }
 

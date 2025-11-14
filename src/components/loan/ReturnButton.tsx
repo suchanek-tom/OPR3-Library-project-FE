@@ -1,4 +1,5 @@
 import { useState, FC } from 'react'
+import { getAuthHeaders } from '../../utils/authHeaders'
 
 interface ReturnButtonProps {
   loanId: number
@@ -21,11 +22,9 @@ const ReturnButton: FC<ReturnButtonProps> = ({ loanId, onSuccess, className }) =
     setMessageType(null)
 
     try {
-      const res = await fetch(`/api/loans/return/${loanId}`, {
+      const res = await fetch(`http://localhost:8080/api/loans/return/${loanId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
       })
 
       if (!res.ok) {

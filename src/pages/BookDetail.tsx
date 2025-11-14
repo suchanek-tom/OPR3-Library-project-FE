@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Book } from "../types/Book";
 import { User, UserRole } from "../types/User";
 import { Loan } from "../types/Loan";
+import { getAuthHeaders } from "../utils/authHeaders";
 import LoanButton from "../components/loan/LoanButton";
 import ReturnButton from "../components/loan/ReturnButton";
 import DeleteButton from "../components/book/DeleteButton";
@@ -25,7 +26,9 @@ const BookDetail: FC = () => {
 
   useEffect(() => {
     if (!id) return setLoading(false);
-    fetch(`/api/books/${id}`)
+    fetch(`http://localhost:8080/api/books/${id}`, {
+      headers: getAuthHeaders(),
+    })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load book");
         return res.json();
@@ -43,7 +46,9 @@ const BookDetail: FC = () => {
 
     const checkUserLoan = async () => {
       try {
-        const response = await fetch(`/api/loans`);
+        const response = await fetch(`http://localhost:8080/api/loans`, {
+          headers: getAuthHeaders(),
+        });
         if (!response.ok) throw new Error("Failed to load loans");
 
         const loans = await response.json();
@@ -67,12 +72,16 @@ const BookDetail: FC = () => {
 
   const handleBorrowSuccess = () => {
     if (id) {
-      fetch(`/api/books/${id}`)
+      fetch(`http://localhost:8080/api/books/${id}`, {
+        headers: getAuthHeaders(),
+      })
         .then((res) => res.json())
         .then((data) => setBook(data));
     }
     if (user) {
-      fetch(`/api/loans`)
+      fetch(`http://localhost:8080/api/loans`, {
+        headers: getAuthHeaders(),
+      })
         .then((res) => res.json())
         .then((loans) => {
           const activeLoan = loans.find(
@@ -89,7 +98,9 @@ const BookDetail: FC = () => {
   const handleReturnSuccess = () => {
     setUserLoan(null);
     if (id) {
-      fetch(`/api/books/${id}`)
+      fetch(`http://localhost:8080/api/books/${id}`, {
+        headers: getAuthHeaders(),
+      })
         .then((res) => res.json())
         .then((data) => setBook(data));
     }

@@ -1,5 +1,6 @@
 import { useState, FC } from "react";
 import { FiTrash2 } from "react-icons/fi";
+import { getAuthHeaders } from "../../utils/authHeaders";
 import Modal from "../Modal";
 import { DeleteButtonProps } from "../../types/Book";
 
@@ -26,9 +27,9 @@ const DeleteButton: FC<DeleteButtonProps> = ({
     setShowModal(false);
     setDeleting(true);
     try {
-      const response = await fetch(`/api/books/${bookId}`, {
+      const response = await fetch(`http://localhost:8080/api/books/${bookId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
       });
 
       if (!response.ok) {

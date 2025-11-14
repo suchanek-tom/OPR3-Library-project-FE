@@ -1,5 +1,6 @@
 import { Loan } from '../types/Loan'
 import { UserRole } from '../types/User'
+import { getAuthHeaders } from './authHeaders'
 
 /**
  * Fetch all loans from the API
@@ -7,7 +8,9 @@ import { UserRole } from '../types/User'
  * @throws Error if the API call fails
  */
 export const fetchAllLoans = async (): Promise<Loan[]> => {
-  const response = await fetch('http://localhost:8080/api/loans')
+  const response = await fetch('http://localhost:8080/api/loans', {
+    headers: getAuthHeaders(),
+  })
   
   if (!response.ok) {
     throw new Error('Failed to load loans')
@@ -44,9 +47,7 @@ export const filterLoansByRole = (
 export const returnLoan = async (loanId: number): Promise<void> => {
   const response = await fetch(`http://localhost:8080/api/loans/return/${loanId}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: getAuthHeaders(),
   })
 
   if (!response.ok) {

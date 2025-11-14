@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Book } from "../../types/Book";
 import { User } from "../../types/User";
+import { getAuthHeaders } from "../../utils/authHeaders";
 import BookSearch from "./BookSearch";
 import DeleteButton from "./DeleteButton";
 import AvailabilityBadge from "./AvailabilityBadge";
@@ -22,7 +23,9 @@ export default function BookList() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/books")
+    fetch("http://localhost:8080/api/books", {
+      headers: getAuthHeaders(),
+    })
       .then(res => {
         if (!res.ok) throw new Error("Failed to load books");
         return res.json();

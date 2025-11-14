@@ -28,7 +28,7 @@ const Register: FC = () => {
     setApiError('')
 
     try {
-      const response = await fetch('http://localhost:8080/api/users', {
+      const response = await fetch('http://localhost:8080/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,6 +40,7 @@ const Register: FC = () => {
           password: data.password,
           address: data.address,
           city: data.city,
+          role: 'ROLE_USER',
         }),
       })
 
@@ -50,7 +51,7 @@ const Register: FC = () => {
       }
 
       localStorage.setItem('user', JSON.stringify(responseData))
-      localStorage.setItem('token', responseData.id)
+      localStorage.setItem('token', responseData.token)
       
       navigate('/')
     } catch (err: any) {
