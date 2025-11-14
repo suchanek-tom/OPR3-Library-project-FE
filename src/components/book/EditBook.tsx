@@ -3,10 +3,13 @@ import { useForm } from "react-hook-form";
 import { Book, EditBookProps } from "../../types/Book";
 import { updateBook } from "../../utils/bookApi";
 import ErrorMessage from "../form/ErrorMessage";
+import Modal from "../Modal";
 
 const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [apiError, setApiError] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Partial<Book>>({
     defaultValues: {
@@ -26,7 +29,8 @@ const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
       const updatedBook = await updateBook(book.id, data);
       onSuccess(updatedBook);
       setIsEditing(false);
-      alert("✅ Book updated successfully!");
+      setModalMessage("✅ Book updated successfully!");
+      setModalOpen(true);
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Failed to update book");
     }
@@ -159,6 +163,16 @@ const EditBook: FC<EditBookProps> = ({ book, onSuccess, className }) => {
           </div>
         </form>
       </div>
+
+      <Modal
+        isOpen={modalOpen}
+        title="Success"
+        onConfirm={() => setModalOpen(false)}
+        onCancel={() => setModalOpen(false)}
+        confirmText="OK"
+      >
+        {modalMessage}
+      </Modal>
     </div>
   );
 };

@@ -4,6 +4,8 @@ import { User, UserRole } from '../types/User'
 import { Loan, LoanStatus } from '../types/Loan'
 import { getStatusBadge, formatDate } from '../utils/loanUtils'
 import { fetchAllLoans, filterLoansByRole, returnLoan } from '../utils/loanApi'
+import Modal from '../components/Modal'
+import Toast from '../components/Toast'
 
 const MyLoans: FC = () => {
   const navigate = useNavigate()
@@ -12,6 +14,11 @@ const MyLoans: FC = () => {
   const [error, setError] = useState<string>('')
   const [user, setUser] = useState<User | null>(null)
   const [returning, setReturning] = useState<number | null>(null)
+  const [toastMessage, setToastMessage] = useState<string>('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [showToast, setShowToast] = useState<boolean>(false)
+  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false)
+  const [confirmLoanId, setConfirmLoanId] = useState<number | null>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -40,24 +47,33 @@ const MyLoans: FC = () => {
   }, [user])
 
   const handleReturnLoan = async (loanId: number): Promise<void> => {
-    if (!window.confirm('Are you sure you want to return this book?')) {
-      return
-    }
+    setConfirmLoanId(loanId)
+    setConfirmModalOpen(true)
+  }
 
-    setReturning(loanId)
+  const handleConfirmReturn = async (): Promise<void> => {
+    if (!confirmLoanId) return
+    
+    setConfirmModalOpen(false)
+    setReturning(confirmLoanId)
     try {
-      await returnLoan(loanId)
+      await returnLoan(confirmLoanId)
       setLoans(loans.map(loan => 
-        loan.id === loanId 
+        loan.id === confirmLoanId 
           ? { ...loan, status: 'RETURNED' as LoanStatus }
           : loan
       ))
-      alert('Book returned successfully!')
+      setToastMessage('Book returned successfully!')
+      setToastType('success')
+      setShowToast(true)
     } catch (err) {
-      alert('Error returning book. Please try again.')
+      setToastMessage('❌ Error returning book. Please try again.')
+      setToastType('error')
+      setShowToast(true)
       console.error(err)
     } finally {
       setReturning(null)
+      setConfirmLoanId(null)
     }
   }
 
@@ -187,6 +203,29 @@ const MyLoans: FC = () => {
           Back to Home
         </button>
       </div>
+
+      <Modal
+        isOpen={confirmModalOpen}
+        title="Confirm Return"
+        onConfirm={handleConfirmReturn}
+        onCancel={() => {
+          setConfirmModalOpen(false)
+          setConfirmLoanId(null)
+        }}
+        confirmText="Yes, Return Book"
+        cancelText="Cancel"
+        isDangerous={true}
+      >
+        Are you sure you want to return this book?
+      </Modal>
+
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   )
 }

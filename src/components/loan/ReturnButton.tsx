@@ -1,5 +1,7 @@
 import { useState, FC } from 'react'
 import { getAuthHeaders } from '../../utils/authHeaders'
+import Modal from '../Modal'
+import Toast from '../Toast'
 
 interface ReturnButtonProps {
   loanId: number
@@ -9,17 +11,18 @@ interface ReturnButtonProps {
 
 const ReturnButton: FC<ReturnButtonProps> = ({ loanId, onSuccess, className }) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
-  const [messageType, setMessageType] = useState<'success' | 'error' | null>(null)
+  const [toastMessage, setToastMessage] = useState<string>('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [showToast, setShowToast] = useState<boolean>(false)
+  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false)
 
   const handleClick = async (): Promise<void> => {
-    if (!window.confirm('Are you sure you want to return this book?')) {
-      return
-    }
+    setConfirmModalOpen(true)
+  }
 
+  const handleConfirmReturn = async (): Promise<void> => {
+    setConfirmModalOpen(false)
     setLoading(true)
-    setMessage(null)
-    setMessageType(null)
 
     try {
       const res = await fetch(`http://localhost:8080/api/loans/return/${loanId}`, {
@@ -33,27 +36,23 @@ const ReturnButton: FC<ReturnButtonProps> = ({ loanId, onSuccess, className }) =
       }
 
       await res.json()
-      setMessage('✅ Book returned successfully!')
-      setMessageType('success')
+      setToastMessage('Book returned successfully!')
+      setToastType('success')
+      setShowToast(true)
 
       if (onSuccess) {
         onSuccess()
       }
-
-      setTimeout(() => setMessage(null), 3000)
     } catch (err: any) {
       console.error('Return error:', err)
       const errorMsg = err?.message ?? 'Failed to return book'
-      setMessage(errorMsg)
-      setMessageType('error')
+      setToastMessage(errorMsg)
+      setToastType('error')
+      setShowToast(true)
     } finally {
       setLoading(false)
     }
   }
-
-  const messageColor = messageType === 'success'
-    ? 'text-green-700 bg-green-50 border border-green-200'
-    : 'text-red-700 bg-red-50 border border-red-200'
 
   return (
     <div>
@@ -64,11 +63,24 @@ const ReturnButton: FC<ReturnButtonProps> = ({ loanId, onSuccess, className }) =
       >
         {loading ? '⏳ Returning...' : '↩️ Return Book'}
       </button>
-      {message && (
-        <p className={`mt-2 text-sm font-medium px-3 py-2 rounded-lg ${messageColor}`}>
-          {message}
-        </p>
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
       )}
+      <Modal
+        isOpen={confirmModalOpen}
+        title="Confirm Return"
+        onConfirm={handleConfirmReturn}
+        onCancel={() => setConfirmModalOpen(false)}
+        confirmText="Yes, Return Book"
+        cancelText="Cancel"
+        isDangerous={true}
+      >
+        Are you sure you want to return this book?
+      </Modal>
     </div>
   )
 }

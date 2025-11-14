@@ -1,6 +1,7 @@
 import { useState, FC } from 'react'
 import { Book } from '../../types/Book'
 import { getAuthHeaders } from '../../utils/authHeaders'
+import Toast from '../Toast'
 
 interface LoanButtonProps {
   bookId: string | number
@@ -10,12 +11,12 @@ interface LoanButtonProps {
 
 const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [toastMessage, setToastMessage] = useState<string>('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [showToast, setShowToast] = useState<boolean>(false)
 
   const handleClick = async (): Promise<void> => {
     setLoading(true)
-    setMessage(null)
-    setMessage(null)
 
     try {
 
@@ -31,8 +32,8 @@ const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({
-          user: { id: userId },
-          book: { id: Number(bookId) },
+          userId,
+          bookId: Number(bookId),
         }),
       })
 
@@ -42,27 +43,23 @@ const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
       }
 
       await res.json()
-      setMessage('📖 Book borrowed successfully!')
-      setMessage('success')
+      setToastMessage('Book borrowed successfully!')
+      setToastType('success')
+      setShowToast(true)
       
       if (onSuccess) {
         onSuccess()
       }
-
-      setTimeout(() => setMessage(null), 3000)
     } catch (err: any) {
       console.error('Borrow error:', err)
       const errorMsg = err?.message ?? 'Failed to borrow book'
-      setMessage(errorMsg)
-      setMessage('error')
+      setToastMessage(errorMsg)
+      setToastType('error')
+      setShowToast(true)
     } finally {
       setLoading(false)
     }
   }
-
-  const messageColor = message === 'success' 
-    ? 'text-green-700 bg-green-50 border border-green-200' 
-    : 'text-red-700 bg-red-50 border border-red-200'
 
   return (
     <div>
@@ -73,10 +70,12 @@ const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
       >
         {loading ? '⏳ Borrowing...' : '📖 Borrow Book'}
       </button>
-      {message && (
-        <p className={`mt-2 text-sm font-medium px-3 py-2 rounded-lg ${messageColor}`}>
-          {message}
-        </p>
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
       )}
     </div>
   )
