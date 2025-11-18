@@ -1,16 +1,142 @@
-# React + Vite
+# 📚 Library System - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Author:** Tomáš Suchanek | **Subject:** 7OPR3 | **Framework:** React 18 + TypeScript + Vite
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Getting Started
 
-## React Compiler
+### Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- Backend API running on `http://localhost:8080`
 
-## Expanding the ESLint configuration
+### Installation & Run
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+# App runs on http://localhost:5173
+```
+
+### Build for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## 📖 Features
+
+### Authentication
+
+- ✅ User registration with validation
+- ✅ JWT-based login
+- ✅ Protected routes
+- ✅ Role-based access (User/Admin)
+- ✅ Password encryption
+
+### Book Management
+
+- ✅ Browse all books
+- ✅ Search and filter by availability
+- ✅ View book details
+- ✅ Add/Edit/Delete books (Admin only)
+- ✅ Real-time availability status
+
+### Loan System
+
+- ✅ Borrow books
+- ✅ Return books
+- ✅ View loan history
+- ✅ Track active loans
+- ✅ Admin loan overview
+
+### User Management
+
+- ✅ User profile editing
+- ✅ Admin user management
+- ✅ View user loan statistics
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── auth/           # Authentication components
+│   ├── book/           # Book-related components
+│   ├── form/           # Form components
+│   └── loan/           # Loan components
+├── pages/              # Page components
+│   ├── auth/           # Login & Register
+│   ├── Home.tsx
+│   ├── BookDetail.tsx
+│   ├── AddBook.tsx
+│   ├── Profile.tsx
+│   ├── MyLoans.tsx
+│   └── AdminUsers.tsx
+├── types/              # TypeScript interfaces
+├── utils/              # API utilities & helpers
+│   ├── authHeaders.ts  # JWT token management
+│   ├── bookApi.ts      # Book API calls
+│   ├── loanApi.ts      # Loan API calls
+│   ├── userApi.ts      # User API calls
+│   └── validation.ts   # Form validation
+├── App.tsx             # Main app component
+└── main.tsx            # App entry point
+```
+
+---
+
+## 🛠️ Technologies
+
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool & dev server
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Styling
+- **JWT** - Authentication
+
+---
+
+## 🔒 Security Features
+
+- JWT token storage in localStorage
+- Protected routes with authentication
+- Role-based access control
+- Password validation
+- Input sanitization
+- Error handling
+
+---
+
+## 🎨 UI Components
+
+- Responsive design
+- Loading states
+- Error messages
+- Success notifications
+- Modal dialogs
+- Toast notifications
+- Availability badges
+- Search & filters
+
+---
+
+## 📝 API Integration
+
+All API calls connect to `http://localhost:8080/api/`
+
+- `/users` - User management
+- `/books` - Book operations
+- `/loans` - Loan operations
+
+Auth headers automatically attached via `getAuthHeaders()` utility.
+
+---
+
+**Status:** ✅ Complete | **Date:** November 18, 2025
