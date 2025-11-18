@@ -1,6 +1,6 @@
 # 📚 Library System - Frontend
 
-**Author:** Tomáš Suchanek | **Subject:** 7OPR3 | **Framework:** React 18 + TypeScript + Vite
+**Author:** Tomáš Suchanek | **Subject:** 7OPR3 | **Framework:** React 18 + TypeScript + Vite | 2025
 
 ---
 
@@ -136,7 +136,3 @@ All API calls connect to `http://localhost:8080/api/`
 - `/loans` - Loan operations
 
 Auth headers automatically attached via `getAuthHeaders()` utility.
-
----
-
-**Status:** ✅ Complete | **Date:** November 18, 2025
