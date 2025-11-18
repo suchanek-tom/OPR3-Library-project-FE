@@ -13,6 +13,7 @@ import Profile from './pages/Profile'
 import MyLoans from './pages/MyLoans'
 import AdminUsers from './pages/AdminUsers'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import NotFound from './pages/NotFound'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -36,7 +37,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="loans" element={<MyLoans />} />
           <Route path="admin/users" element={<AdminUsers />} />
         </Route>
-        <Route path="*" element={<div className="text-center py-8">Page Not Found</div>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
