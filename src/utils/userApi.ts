@@ -1,5 +1,6 @@
 import { User } from '../types/User'
 import { Loan } from '../types/Loan'
+import { getAuthHeaders } from './authHeaders'
 
 /**
  * Fetch all users from the API
@@ -7,7 +8,9 @@ import { Loan } from '../types/Loan'
  * @throws Error if the API call fails
  */
 export const fetchAllUsers = async (): Promise<User[]> => {
-  const response = await fetch('http://localhost:8080/api/users')
+  const response = await fetch('http://localhost:8080/api/users', {
+    headers: getAuthHeaders(),
+  })
 
   if (!response.ok) {
     throw new Error('Failed to load users')
@@ -23,7 +26,9 @@ export const fetchAllUsers = async (): Promise<User[]> => {
  * @throws Error if the API call fails
  */
 export const fetchAllLoans = async (): Promise<Loan[]> => {
-  const response = await fetch('http://localhost:8080/api/loans')
+  const response = await fetch('http://localhost:8080/api/loans', {
+    headers: getAuthHeaders(),
+  })
 
   if (!response.ok) {
     throw new Error('Failed to load loans')
