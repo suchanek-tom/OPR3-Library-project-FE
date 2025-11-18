@@ -101,6 +101,14 @@ const Login: FC = () => {
             {errors.password && (
               <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
             )}
+            <div className="text-right mt-1">
+              <a 
+                href="/forgot-password" 
+                className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                Forgot password?
+              </a>
+            </div>
           </div>
 
           {apiError && <ErrorMessage message={apiError} />}
