@@ -1,3 +1,15 @@
+import { ReactNode } from "react"
+
+export interface AuthLinkProps {
+  text: string
+  linkText: string
+  linkTo: '/login' | '/register'
+}
+
+export interface ProtectedRouteProps {
+  children: ReactNode
+}
+
 export interface LoginFormInputs {
   email: string
   password: string
@@ -22,4 +34,12 @@ export interface RegisterFormInputs {
   city: string
   password: string
   confirmPassword: string
+}
+
+export interface ErrorMessageProps {
+  message: string
+}
+
+export interface SuccessMessageProps {
+  message: string
 }

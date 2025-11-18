@@ -1,8 +1,5 @@
 import { FC } from 'react'
-
-interface SuccessMessageProps {
-  message: string
-}
+import { SuccessMessageProps } from '../../types/Auth'
 
 const SuccessMessage: FC<SuccessMessageProps> = ({ message }) => {
   return (

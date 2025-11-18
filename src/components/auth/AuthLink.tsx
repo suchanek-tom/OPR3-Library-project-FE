@@ -1,11 +1,6 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
-
-interface AuthLinkProps {
-  text: string
-  linkText: string
-  linkTo: '/login' | '/register'
-}
+import { AuthLinkProps } from '../../types/Auth'
 
 const AuthLink: FC<AuthLinkProps> = ({ text, linkText, linkTo }) => {
   return (

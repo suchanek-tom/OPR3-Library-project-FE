@@ -1,9 +1,6 @@
 import { Navigate } from 'react-router-dom'
-import { ReactNode, FC } from 'react'
-
-interface ProtectedRouteProps {
-  children: ReactNode
-}
+import { FC } from 'react'
+import { ProtectedRouteProps } from '../../types/Auth'
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ children }) => {
   const token = localStorage.getItem('token')

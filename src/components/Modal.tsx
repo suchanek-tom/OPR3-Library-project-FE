@@ -1,15 +1,5 @@
-import { FC, ReactNode } from "react";
-
-interface ModalProps {
-  isOpen: boolean;
-  title: string;
-  children: ReactNode;
-  onConfirm: () => void;
-  onCancel: () => void;
-  confirmText?: string;
-  cancelText?: string;
-  isDangerous?: boolean;
-}
+import { FC } from "react";
+import { ModalProps } from "../types/Modal";
 
 const Modal: FC<ModalProps> = ({
   isOpen,

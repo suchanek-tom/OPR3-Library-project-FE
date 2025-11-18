@@ -1,3 +1,5 @@
+import { Book } from "./Book"
+
 export enum LoanStatus {
   ACTIVE = 'ACTIVE',
   RETURNED = 'RETURNED',
@@ -20,6 +22,18 @@ export interface Loan {
     name: string
     email: string
   }
+}
+
+export interface LoanButtonProps {
+  bookId: string | number
+  onSuccess?: (updated?: Book) => void
+  className?: string
+}
+
+export interface ReturnButtonProps {
+  loanId: number
+  onSuccess?: () => void
+  className?: string
 }
 
 export interface LoanBadge {

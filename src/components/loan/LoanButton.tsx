@@ -1,13 +1,7 @@
 import { useState, FC } from 'react'
-import { Book } from '../../types/Book'
 import { getAuthHeaders } from '../../utils/authHeaders'
 import Toast from '../Toast'
-
-interface LoanButtonProps {
-  bookId: string | number
-  onSuccess?: (updated?: Book) => void
-  className?: string
-}
+import { LoanButtonProps } from '../../types/Loan'
 
 const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
   const [loading, setLoading] = useState<boolean>(false)

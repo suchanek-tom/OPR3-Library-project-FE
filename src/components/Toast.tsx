@@ -1,11 +1,5 @@
 import { FC, useEffect } from 'react'
-
-interface ToastProps {
-  message: string
-  type: 'success' | 'error'
-  onClose: () => void
-  duration?: number
-}
+import { ToastProps } from '../types/Toast'
 
 const Toast: FC<ToastProps> = ({ message, type, onClose, duration = 3000 }) => {
   useEffect(() => {

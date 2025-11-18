@@ -1,8 +1,5 @@
 import { FC } from 'react'
-
-interface ErrorMessageProps {
-  message: string
-}
+import { ErrorMessageProps } from '../../types/Auth'
 
 const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => {
   return (

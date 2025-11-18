@@ -2,12 +2,7 @@ import { useState, FC } from 'react'
 import { getAuthHeaders } from '../../utils/authHeaders'
 import Modal from '../Modal'
 import Toast from '../Toast'
-
-interface ReturnButtonProps {
-  loanId: number
-  onSuccess?: () => void
-  className?: string
-}
+import { ReturnButtonProps } from '../../types/Loan'
 
 const ReturnButton: FC<ReturnButtonProps> = ({ loanId, onSuccess, className }) => {
   const [loading, setLoading] = useState<boolean>(false)
