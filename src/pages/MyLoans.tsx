@@ -58,9 +58,10 @@ const MyLoans: FC = () => {
     setReturning(confirmLoanId)
     try {
       await returnLoan(confirmLoanId)
+      const today = new Date().toISOString().split('T')[0]
       setLoans(loans.map(loan => 
         loan.id === confirmLoanId 
-          ? { ...loan, status: 'RETURNED' as LoanStatus }
+          ? { ...loan, status: 'RETURNED' as LoanStatus, returnDate: today }
           : loan
       ))
       setToastMessage('Book returned successfully!')
