@@ -1,6 +1,6 @@
 # 📚 Library System - Frontend
 
-**Author:** Tomáš Suchanek | **Subject:** 7OPR3 | **Framework:** React 18 + TypeScript + Vite | 2025
+**Author:** Tomáš Suchanek | **Subject:** 7OPR3 | **Framework:** React 19 + TypeScript + Vite | 2025
 
 ---
 
@@ -14,6 +14,7 @@
 ### Installation & Run
 
 ```bash
+cd frontend
 npm install
 npm run dev
 # App runs on http://localhost:5173
@@ -24,6 +25,12 @@ npm run dev
 ```bash
 npm run build
 npm run preview
+```
+
+### Linting
+
+```bash
+npm run lint
 ```
 
 ---
@@ -94,36 +101,42 @@ src/
 
 ## 🛠️ Technologies
 
-- **React 18** - UI library
+- **React 19.1** - Modern UI library with improved hooks
 - **TypeScript** - Type safety
-- **Vite** - Build tool & dev server
-- **React Router** - Client-side routing
-- **Tailwind CSS** - Styling
-- **JWT** - Authentication
+- **Vite 7** - Fast build tool & dev server
+- **React Router 6** - Client-side routing
+- **Tailwind CSS 4** - Utility-first styling
+- **React Hook Form 7** - Efficient form state management
+- **React Icons 5** - Icon library
+- **JWT** - JWT-based authentication
 
 ---
 
 ## 🔒 Security Features
 
-- JWT token storage in localStorage
-- Protected routes with authentication
-- Role-based access control
-- Password validation
-- Input sanitization
-- Error handling
+- ✅ JWT token storage in localStorage
+- ✅ Protected routes requiring authentication
+- ✅ Role-based access control (User/Admin roles)
+- ✅ Client-side form validation
+- ✅ Backend validation with error responses
+- ✅ Password confirmation on registration
+- ✅ Secure token-based API requests
+- ✅ Automatic error boundary handling
 
 ---
 
-## 🎨 UI Components
+## 🎨 UI/UX Features
 
-- Responsive design
-- Loading states
-- Error messages
-- Success notifications
-- Modal dialogs
-- Toast notifications
-- Availability badges
-- Search & filters
+- **Responsive Design** - Works on desktop, tablet, mobile
+- **Loading States** - User feedback during API calls
+- **Error Messages** - Clear validation error display
+- **Toast Notifications** - Success/error notifications
+- **Modal Dialogs** - Confirmation for destructive actions
+- **Availability Badges** - Visual book status indicators
+- **Search & Filters** - Find books by availability
+- **Accessible Forms** - Proper labels and input validation
+- **Dark-Friendly UI** - Clean gray/blue color palette
+- **Icon Support** - React Icons for better UX
 
 ---
 
@@ -131,8 +144,61 @@ src/
 
 All API calls connect to `http://localhost:8080/api/`
 
-- `/users` - User management
-- `/books` - Book operations
-- `/loans` - Loan operations
+### Endpoints
 
-Auth headers automatically attached via `getAuthHeaders()` utility.
+- **Users**: `/users` - Login, Register, Profile, User Management
+- **Books**: `/books` - List, Search, Details, Create, Update, Delete
+- **Loans**: `/loans` - Borrow, Return, View History, Admin Overview
+
+### Authentication
+
+- JWT token auto-attached to all requests via `getAuthHeaders()`
+- Token stored in localStorage
+- Token refreshed on each successful login
+- Protected endpoints require valid token
+
+---
+
+## 🧪 Form Validation
+
+- **Registration Form**: Name, Email, Password, Address, City
+- **Login Form**: Email, Password
+- **Book Form**: Title, Author, ISBN, Publication Year
+- **Profile Form**: Name, Surname, Email, Address, City
+
+Real-time validation with user-friendly error messages.
+
+---
+
+## 📊 Pages & Routes
+
+| Route          | Access        | Purpose             |
+| -------------- | ------------- | ------------------- |
+| `/`            | Public        | Home - Browse Books |
+| `/login`       | Public        | User Login          |
+| `/register`    | Public        | User Registration   |
+| `/book/:id`    | Authenticated | Book Details        |
+| `/add-book`    | Admin Only    | Create Book         |
+| `/profile`     | Authenticated | User Profile        |
+| `/my-loans`    | Authenticated | View Active Loans   |
+| `/admin/users` | Admin Only    | Manage Users        |
+
+---
+
+## 🔐 User Roles
+
+### Regular User
+
+- View all books
+- Search books by availability
+- Borrow/return books
+- View own loan history
+- Edit profile
+
+### Admin
+
+- All user permissions
+- Add/Edit/Delete books
+- Bulk book creation
+- Manage all users
+- View all loans
