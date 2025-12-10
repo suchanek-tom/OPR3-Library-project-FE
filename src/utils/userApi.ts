@@ -69,3 +69,19 @@ export const getUsersWithStats = (users: User[], loans: Loan[]) => {
     loanStats: getUserLoanStats(user.id, loans),
   }))
 }
+
+/**
+ * Delete a user by ID
+ * @param userId - The user ID to delete
+ * @throws Error if the API call fails
+ */
+export const deleteUser = async (userId: number): Promise<void> => {
+  const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to delete user')
+  }
+}
