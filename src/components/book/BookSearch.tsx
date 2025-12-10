@@ -1,10 +1,6 @@
-type Props = {
-  query: string
-  onChange: (q: string) => void
-  placeholder?: string
-}
+import { BookSearchProps } from "../../types/Book"
 
-const BookSearch = ({ query, onChange, placeholder = 'Search by title...' }: Props) => {
+const BookSearch = ({ query, onChange, placeholder = 'Search by title...' }: BookSearchProps) => {
   return (
     <div className="mb-4 flex flex-col sm:flex-row gap-2 items-start sm:items-center">
       <input

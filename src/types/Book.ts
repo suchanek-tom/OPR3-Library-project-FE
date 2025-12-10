@@ -41,3 +41,13 @@ export interface DeleteButtonProps {
   showMessage?: boolean;
   onClick?: (e: React.MouseEvent) => void;
 }
+
+export interface AvailabilityBadgeProps {
+  available: boolean
+}
+
+export type BookSearchProps = {
+  query: string
+  onChange: (q: string) => void
+  placeholder?: string
+}

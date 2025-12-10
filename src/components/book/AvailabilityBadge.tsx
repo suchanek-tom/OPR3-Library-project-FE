@@ -1,8 +1,5 @@
 import { FC } from 'react'
-
-interface AvailabilityBadgeProps {
-  available: boolean
-}
+import { AvailabilityBadgeProps } from '../../types/Book'
 
 const AvailabilityBadge: FC<AvailabilityBadgeProps> = ({ available }) => {
   return (
