@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Book } from "../../types/Book";
-import { User } from "../../types/User";
-import { getAuthHeaders } from "../../utils/authHeaders";
-import BookSearch from "./BookSearch";
-import DeleteButton from "./DeleteButton";
-import AvailabilityBadge from "./AvailabilityBadge";
+import { Book } from "../types/Book";
+import { User } from "../types/User";
+import { getAuthHeaders } from "../utils/authHeaders";
+import BookSearch from "../components/book/BookSearch";
+import DeleteButton from "../components/book/DeleteButton";
+import AvailabilityBadge from "../components/book/AvailabilityBadge";
 
 
 export default function BookList() {
