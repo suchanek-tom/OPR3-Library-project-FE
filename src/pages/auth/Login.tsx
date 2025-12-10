@@ -2,6 +2,7 @@ import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { LoginFormInputs } from '../../types/Auth'
+import { sanitizeInput } from '../../utils/validation'
 import AuthLink from '../../components/auth/AuthLink'
 import ErrorMessage from '../../components/form/ErrorMessage'
 
@@ -21,12 +22,18 @@ const Login: FC = () => {
     setApiError('')
 
     try {
+      // Sanitize email input to prevent XSS
+      const sanitizedData = {
+        email: sanitizeInput(data.email),
+        password: data.password, 
+      }
+
       const response = await fetch('http://localhost:8080/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(sanitizedData),
       })
 
       const responseData = await response.json()

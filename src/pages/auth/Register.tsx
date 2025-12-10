@@ -2,6 +2,7 @@ import { useState, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { RegisterFormInputs } from '../../types/Auth'
+import { sanitizeInput } from '../../utils/validation'
 import AuthLink from '../../components/auth/AuthLink'
 import ErrorMessage from '../../components/form/ErrorMessage'
 
@@ -28,20 +29,23 @@ const Register: FC = () => {
     setApiError('')
 
     try {
+      // Sanitize user inputs to prevent XSS
+      const sanitizedData = {
+        name: sanitizeInput(data.name),
+        surname: sanitizeInput(data.surname),
+        email: sanitizeInput(data.email),
+        address: sanitizeInput(data.address),
+        city: sanitizeInput(data.city),
+        password: data.password,
+        role: 'ROLE_USER',
+      }
+
       const response = await fetch('http://localhost:8080/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: data.name,
-          surname: data.surname,
-          email: data.email,
-          password: data.password,
-          address: data.address,
-          city: data.city,
-          role: 'ROLE_USER',
-        }),
+        body: JSON.stringify(sanitizedData),
       })
 
       const responseData = await response.json()

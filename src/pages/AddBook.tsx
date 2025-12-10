@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import useUser from '../hooks/useUser'
 import { BookFormData } from '../types/Book'
+import { sanitizeInput } from '../utils/validation'
 import { getAuthHeaders } from '../utils/authHeaders'
 import ErrorMessage from '../components/form/ErrorMessage'
 import SuccessMessage from '../components/form/SuccessMessage'
@@ -35,10 +36,20 @@ const AddBook: FC = () => {
     setSuccess('')
 
     try {
+      // Sanitize user inputs to prevent XSS
+      const sanitizedData = {
+        title: sanitizeInput(data.title),
+        author: sanitizeInput(data.author),
+        isbn: sanitizeInput(data.isbn),
+        publicationYear: data.publicationYear,
+        available: data.available,
+        content: sanitizeInput(data.content),
+      }
+
       const response = await fetch('http://localhost:8080/api/books', {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify(data),
+        body: JSON.stringify(sanitizedData),
       })
 
       const responseData = await response.json()
