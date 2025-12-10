@@ -1,23 +1,14 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { User } from './types/User'
+import useUser from './hooks/useUser'
 import Header from './components/Header'
 
 const App = () => {
   const navigate = useNavigate()
-  const [user, setUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-  }, [])
+  const { user, clearUser } = useUser()
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setUser(null)
+    clearUser()
     navigate('/login')
   }
 

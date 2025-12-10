@@ -1,19 +1,10 @@
-import { useState, useEffect, FC } from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User } from '../types/User'
+import useUser from '../hooks/useUser'
 
 const Profile: FC = () => {
   const navigate = useNavigate()
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-    setLoading(false)
-  }, [])
+  const { user, isLoading: loading } = useUser()
 
   if (loading) {
     return <div className="text-center py-8">Loading...</div>

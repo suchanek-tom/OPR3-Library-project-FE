@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { AvailabilityFilterProps } from "../types/Book";
+import { AvailabilityFilterProps } from "../../types/Book";
 
 const AvailabilityFilter: FC<AvailabilityFilterProps> = ({ 
   available, 

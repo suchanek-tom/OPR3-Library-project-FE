@@ -1,15 +1,8 @@
-import { FC, useEffect, useState } from 'react'
-import { User } from '../types/User'
+import { FC } from 'react'
+import useUser from '../hooks/useUser'
 
 const Home: FC = () => {
-  const [user, setUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-  }, [])
+  const { user } = useUser()
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">

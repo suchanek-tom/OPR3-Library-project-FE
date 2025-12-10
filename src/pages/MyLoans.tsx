@@ -1,6 +1,7 @@
 import { useState, useEffect, FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, UserRole } from '../types/User'
+import useUser from '../hooks/useUser'
+import { UserRole } from '../types/User'
 import { Loan, LoanStatus } from '../types/Loan'
 import { getStatusBadge, formatDate } from '../utils/loanUtils'
 import { fetchAllLoans, filterLoansByRole, returnLoan } from '../utils/loanApi'
@@ -9,23 +10,16 @@ import Toast from '../components/Toast'
 
 const MyLoans: FC = () => {
   const navigate = useNavigate()
+  const { user } = useUser()
   const [loans, setLoans] = useState<Loan[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string>('')
-  const [user, setUser] = useState<User | null>(null)
   const [returning, setReturning] = useState<number | null>(null)
   const [toastMessage, setToastMessage] = useState<string>('')
   const [toastType, setToastType] = useState<'success' | 'error'>('success')
   const [showToast, setShowToast] = useState<boolean>(false)
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false)
   const [confirmLoanId, setConfirmLoanId] = useState<number | null>(null)
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-  }, [])
 
   useEffect(() => {
     if (!user) return

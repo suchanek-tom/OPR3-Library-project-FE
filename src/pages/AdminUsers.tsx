@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useUser from '../hooks/useUser'
 import { fetchAllUsers, fetchAllLoans, getUsersWithStats } from '../utils/userApi'
 import { StatCard, UserWithStats } from '../types/User'
 import { LoanBadge } from '../types/Loan'
@@ -7,22 +8,17 @@ import { TableHeader } from '../types/Table'
 
 const AdminUsers = () => {
   const navigate = useNavigate()
+  const { user } = useUser()
   const [users, setUsers] = useState<UserWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  const checkAdminAccess = () => {
-    const storedUser = localStorage.getItem('user')
-    const user = storedUser ? JSON.parse(storedUser) : null
+  useEffect(() => {
     if (!user || user.role !== 'ROLE_ADMIN') {
       navigate(user ? '/' : '/login')
     }
-  }
-
-  useEffect(() => {
-    checkAdminAccess()
-  }, [navigate])
+  }, [navigate, user])
 
   useEffect(() => {
     const loadData = async () => {

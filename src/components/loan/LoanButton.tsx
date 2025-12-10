@@ -1,9 +1,11 @@
 import { useState, FC } from 'react'
+import useUser from '../../hooks/useUser'
 import { getAuthHeaders } from '../../utils/authHeaders'
 import Toast from '../Toast'
 import { LoanButtonProps } from '../../types/Loan'
 
 const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
+  const { user } = useUser()
   const [loading, setLoading] = useState<boolean>(false)
   const [toastMessage, setToastMessage] = useState<string>('')
   const [toastType, setToastType] = useState<'success' | 'error'>('success')
@@ -13,13 +15,10 @@ const LoanButton: FC<LoanButtonProps> = ({ bookId, onSuccess, className }) => {
     setLoading(true)
 
     try {
-
-      const userStr = localStorage.getItem('user')
-      if (!userStr) {
+      if (!user) {
         throw new Error('User not logged in')
       }
 
-      const user = JSON.parse(userStr)
       const userId = user.id
 
       const res = await fetch(`http://localhost:8080/api/loans/borrow`, {

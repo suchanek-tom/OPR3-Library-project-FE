@@ -1,7 +1,8 @@
 import { useEffect, useState, FC, SetStateAction } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useUser from "../hooks/useUser";
 import { Book } from "../types/Book";
-import { User, UserRole } from "../types/User";
+import { UserRole } from "../types/User";
 import { Loan } from "../types/Loan";
 import { getAuthHeaders } from "../utils/authHeaders";
 import LoanButton from "../components/loan/LoanButton";
@@ -12,17 +13,10 @@ import EditBook from "../components/book/EditBook";
 const BookDetail: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useUser()
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
   const [userLoan, setUserLoan] = useState<Loan | null>(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   useEffect(() => {
     if (!id) return setLoading(false);

@@ -1,7 +1,7 @@
 import { useEffect, FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { User } from '../types/User'
+import useUser from '../hooks/useUser'
 import { BookFormData } from '../types/Book'
 import { getAuthHeaders } from '../utils/authHeaders'
 import ErrorMessage from '../components/form/ErrorMessage'
@@ -9,8 +9,7 @@ import SuccessMessage from '../components/form/SuccessMessage'
 
 const AddBook: FC = () => {
   const navigate = useNavigate()
-  const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(true)
+  const { user, isLoading } = useUser()
   const [apiError, setApiError] = useState<string>('')
   const [success, setSuccess] = useState<string>('')
 
@@ -26,15 +25,10 @@ const AddBook: FC = () => {
   })
 
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if (user) {
-      const parsedUser: User = JSON.parse(user)
-      if (parsedUser.role === 'ROLE_ADMIN') {
-        setIsAuthorized(true)
-      }
+    if (!isLoading && (!user || user.role !== 'ROLE_ADMIN')) {
+      navigate('/login')
     }
-    setLoading(false)
-  }, [])
+  }, [user, isLoading, navigate])
 
   const onSubmit = async (data: BookFormData) => {
     setApiError('')
@@ -62,11 +56,11 @@ const AddBook: FC = () => {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return <div className="text-center py-8">Loading...</div>
   }
 
-  if (!isAuthorized) {
+  if (!user || user.role !== 'ROLE_ADMIN') {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg shadow-lg p-8 max-w-2xl mx-auto text-center">
         <h2 className="text-2xl font-bold text-red-700 mb-4">Access Denied</h2>

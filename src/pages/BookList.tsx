@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import useUser from "../hooks/useUser";
 import { Book } from "../types/Book";
-import { User } from "../types/User";
 import { getAuthHeaders } from "../utils/authHeaders";
 import BookSearch from "../components/book/BookSearch";
 import DeleteButton from "../components/book/DeleteButton";
@@ -9,18 +9,11 @@ import AvailabilityBadge from "../components/book/AvailabilityBadge";
 
 
 export default function BookList() {
+  const { user } = useUser()
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [user, setUser] = useState<User | null>(null);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/books", {
